@@ -25,7 +25,7 @@ namespace _2inch
                     return long_link;
                 }
             }
-            return "Error";
+            return null;
         }
     }
 }

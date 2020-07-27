@@ -45,6 +45,10 @@ namespace _2inch
                     var name = context.Request.RouteValues["name"];
                     string url = Convert.ToString(name);
                     string final = database.Database(url);
+                    if(final == null) {
+                        await context.Response.WriteAsync("404");
+                        return;
+                    }
                     context.Response.Redirect(final);
                 });
             });
