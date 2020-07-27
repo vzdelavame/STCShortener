@@ -31,9 +31,21 @@ namespace _2inch
 
             app.UseEndpoints(endpoints =>
             {
+
                 endpoints.MapGet("/", async context =>
                 {
-                    context.Response.Redirect("http://www.google.com"); //Babysteps. Ale funguje!!!!!!
+                    await context.Response.WriteAsync("Hello World!");
+                });
+                endpoints.MapGet("/admin", async context =>
+                {
+                    await context.Response.WriteAsync("ADMIN PAGE!");
+                });
+                endpoints.MapGet("/{name:alpha}", async context =>
+                {
+                    var name = context.Request.RouteValues["name"];
+                    string url = Convert.ToString(name);
+                    string final = database.Database(url);
+                    context.Response.Redirect(final);
                 });
             });
         }
