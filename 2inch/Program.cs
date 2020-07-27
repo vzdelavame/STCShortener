@@ -21,7 +21,6 @@ namespace _2inch
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    Console.WriteLine("Hello");
                 });
     }
 }
