@@ -28,11 +28,12 @@ namespace _2inch
 
             app.UseRouting();
 
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Hello World!");
+                    context.Response.Redirect("http://www.google.com"); //Babysteps. Ale funguje!!!!!!
                 });
             });
         }
