@@ -10,7 +10,7 @@ namespace _2inch.Utils
     public class Database
     {
 
-        private static string SQL_CONNECTION_STRING = "string";
+        private static string SQL_CONNECTION_STRING = "String";
         
         public static string getLongLink(string shortLink)
         {
