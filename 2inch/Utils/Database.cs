@@ -10,7 +10,7 @@ namespace _2inch.Utils
     public class Database
     {
 
-        private static string SQL_CONNECTION_STRING = "con string";
+        private static string SQL_CONNECTION_STRING = "string";
         
         public static string getLongLink(string shortLink)
         {
@@ -34,7 +34,7 @@ namespace _2inch.Utils
             }
         }
 
-        public async static Task<bool> VerifyAdminCredentials(Models.Auth login)
+        public async static Task<bool> VerifyAdminCredentials(Models.Auth login) //funkcia na porovanie hesla v databaze a zadaneho hesla
         {
             bool response = false;
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
