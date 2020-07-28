@@ -30,7 +30,7 @@ namespace _2inch
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Hello World!");
+                    await context.Response.WriteAsync("STC SHORTENER");
                 });
 
                 endpoints.MapControllerRoute(

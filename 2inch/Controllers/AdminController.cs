@@ -17,7 +17,7 @@ namespace _2inch.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(Models.Auth auth) //Does not get picked up yet. :/
         {
-            //if (await AdminLogin.CheckCred(auth)) return View("AdminPanel"); //Redirects to AdminPanel if returns True
+            if (await AdminLogin.CheckCred(auth)) return View("AdminPanel"); //Redirects to AdminPanel if returns True
             ViewBag.Passed = false;//Should Update Admin login with 'Incorrect Credentials'
             return View(); //Redirection if AdminLog.CheckCred(auth) returns False
         }
