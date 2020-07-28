@@ -1,0 +1,31 @@
+﻿@page
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="utf-8">
+    	<title>ŠTC Shortener</title>
+    	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    	<link rel="stylesheet" href="~/css/error.css">
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+<body>
+	<div id="app">
+		<nav class="level" role="navigation" aria-label="main navigation">
+			<a class="level-item has-text-centered" href="http://stcmicrosoft.azurewebsites.net/">
+			    <img src="~/images/STCBLACK.png" style="height: 50px; margin-top: 10px;">
+			</a>
+		</nav>
+
+		<div id="notfound" v-cloak>
+			<div class="notfound">
+				<div class="notfound-404">
+					<h1>404</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="~/js/index.js"></script>
+</body>
+</html>

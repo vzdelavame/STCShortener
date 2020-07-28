@@ -24,9 +24,11 @@ namespace _2inch
 
             app.UseRouting();
 
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
-            {                      
+            {
+                endpoints.MapControllerRoute(name: "NotFound", pattern: "/404", defaults: new {controller = "NotFound", action = "Index"});              
 
                 endpoints.MapGet("/", async context =>
                 {
@@ -44,7 +46,7 @@ namespace _2inch
                     string url = Convert.ToString(name);
                     string final = Database.getLongLink(url);
                     if(final == null) {
-                        await context.Response.WriteAsync("404");
+                        context.Response.Redirect("/404");
                         return;
                     }
                     context.Response.Redirect(final);

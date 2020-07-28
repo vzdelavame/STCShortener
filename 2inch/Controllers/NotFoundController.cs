@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace _2inch.Controllers
 {
-    public class _404Controller : Controller
+    public class NotFoundController : Controller
     {
         public IActionResult Index()
         {
