@@ -28,17 +28,20 @@ namespace _2inch
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(name: "NotFound", pattern: "/404", defaults: new {controller = "NotFound", action = "Index"});              
-
                 endpoints.MapGet("/", async context =>
                 {
                     await context.Response.WriteAsync("Hello World!");
                 });
 
-                endpoints.MapGet("/admin", async context =>
-                {
-                    await context.Response.WriteAsync("ADMIN PAGE!");
-                });
+                endpoints.MapControllerRoute(
+                    name: "NotFoundRoute",
+                    pattern: "/404",
+                    defaults: new { controller = "NotFound", action = "Index" });
+
+                endpoints.MapControllerRoute(
+                    name: "Admin",
+                    pattern: "/Admin",
+                    defaults: new { controller = "Admin", action = "Index" });
 
                 endpoints.MapGet("/{name:alpha}", async context =>
                 {
