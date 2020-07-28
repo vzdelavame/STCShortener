@@ -21,13 +21,18 @@
                                 @using (Html.BeginForm("Login", "Admin", FormMethod.Post, new {@class = "box"}))
                                 {
                                     <div class="field">
-                                        <p style="text-align: center;">Admin login - ŠTC Shortener</p>
+                                        <h3 class="subtitle is-5">Login - ŠTC Shortener</h3>
                                     </div>
                                     @if (ViewBag.Passed == false)
                                     {
-                                        <div class="field">
-                                            <p>Incorrect Credentials!</p>
-                                        </div>
+                                        <article class="message is-danger field">
+                                            <div class="message-header">
+                                                <p>Invalid Credentials!</p>
+                                            </div>
+                                            <div class="message-body">
+                                                You have entered invalid password or this email does not exists!
+                                            </div>
+                                        </article>
                                     }
                                     <div class="field">
                                         <label for="" class="label">Email</label>
