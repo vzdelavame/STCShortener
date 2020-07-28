@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
 
-namespace _2inch
+namespace _2inch.Utils
 {
     public class Database
     {
