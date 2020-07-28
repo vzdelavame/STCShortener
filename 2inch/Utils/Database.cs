@@ -57,5 +57,25 @@ namespace _2inch.Utils
                 return response;
             }
         }
+        public async static Task InsertLink(Models.Link link)
+        {
+            using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
+            {
+                //Toto by malo vložiť long_link a short_link, tieto názvy stĺpcov som používal podľa predošlích funkcii.
+                string queryString = "INSERT INTO links_table (long_link, short_link)";
+                queryString += " VALUES(@long_link, @short_link)";
+
+                await conn.OpenAsync();
+
+                using (SqlCommand insert = new SqlCommand(queryString, conn))
+                {
+                    insert.Parameters.AddWithValue("@long_link", link.longLink);
+                    insert.Parameters.AddWithValue("@short_link", link.shortLink);
+
+                    await insert.ExecuteNonQueryAsync();
+                    await conn.CloseAsync();
+                }
+            }
+        }
     }
 }
