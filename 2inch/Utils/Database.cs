@@ -19,14 +19,13 @@ namespace _2inch.Utils
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(null, connection))
                 {
-                    command.CommandText = "SELECT long_link FROM links_table WHERE short_link = '@link'";
-                    command.Parameters.Add(new SqlParameter("@link", SqlDbType.Text, 1024)).Value = shortLink;
-                    command.Prepare();
+                    command.CommandText = "SELECT * FROM links_table WHERE short_link = @link";
+                    command.Parameters.AddWithValue("@link", shortLink);
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         if(reader.Read()) 
                         {
-                            string longLink = reader.GetString(0);
+                            string longLink = reader.GetString(1);
                             return longLink;
                         }
                     }

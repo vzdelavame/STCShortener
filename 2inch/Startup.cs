@@ -50,6 +50,8 @@ namespace _2inch
                     context.Response.Redirect(final);
                 });
             });
+
+            Database.getAll();
         }
     }
 }
