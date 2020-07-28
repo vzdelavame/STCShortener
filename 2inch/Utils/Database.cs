@@ -10,16 +10,17 @@ namespace _2inch.Utils
     public class Database
     {
 
-        private static string SQL_CONNECTION_STRING = "sem vloz connection string";
+        private static string SQL_CONNECTION_STRING = "Server=tcp:zaverecnyprojekt.database.windows.net,1433;Initial Catalog = shortenerletnaskola; Persist Security Info=False;User ID = andrejmokris; Password=ZaverecnapracaSTC2019;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout = 30;";
         
         public static string getLongLink(string shortLink)
         {
             using (SqlConnection connection = new SqlConnection(SQL_CONNECTION_STRING)) 
             {
+                connection.Open();
                 using (SqlCommand command = new SqlCommand(null, connection))
                 {
                     command.CommandText = "SELECT long_link FROM links_table WHERE short_link = '@link'";
-                    command.Parameters.Add(new SqlParameter("@link", shortLink));
+                    command.Parameters.Add(new SqlParameter("@link", SqlDbType.Text, 1024)).Value = shortLink;
                     command.Prepare();
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
