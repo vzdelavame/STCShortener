@@ -1,6 +1,44 @@
-﻿@*
+﻿@model _2inch.Models.Auth; 
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
-<p>ADMIN PAGE HTML</p>
+<!Doctype html>
+
+<html>
+    <head>
+        <meta name="testhead" content="width-device-width" />
+        <title>AdminTest</title>
+    </head>
+
+    <body>
+        @using (Html.BeginForm("Login", "Admin", FormMethod.Post))
+        {
+            @if (ViewBag.Passed == false)
+            {
+                <p>Incorrect Credentials!</p>
+            }
+            <table cellpadding="0" cellspacing="0">
+                <tr>
+                    <th colspan="2" align="center">Login Credentials</th>
+                </tr>
+                <tr>
+                    <td>Login Username:</td>
+                    <td>
+                        @Html.TextBoxFor(M => M.Name)
+                    </td>
+                </tr>
+                <tr>
+                    <td>Login Password:</td>
+                    <td>
+                        @Html.PasswordFor(M => M.Pass)
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="submit" value="Enter"/></td>
+                </tr>
+            </table>
+        }
+    </body>
+</html>
