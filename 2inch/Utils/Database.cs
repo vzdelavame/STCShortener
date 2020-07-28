@@ -10,7 +10,7 @@ namespace _2inch.Utils
     public class Database
     {
 
-        private static string SQL_CONNECTION_STRING = "sem vloz connection string";
+        private static string SQL_CONNECTION_STRING = "con string";
         
         public static string getLongLink(string shortLink)
         {
@@ -31,6 +31,30 @@ namespace _2inch.Utils
                     }
                 }
                 return null;
+            }
+        }
+
+        public async static Task<bool> VerifyAdminCredentials(Models.Auth login)
+        {
+            bool response = false;
+            using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
+            {
+                string queryString = $"SELECT * FROM admin_table WHERE email=@user";
+                using (SqlCommand command = new SqlCommand(queryString, conn))
+                {
+                    command.Parameters.AddWithValue("@user", login.Name);
+                    await conn.OpenAsync();
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            response = reader.GetString(1) == login.Pass;
+                            break;
+                        }
+                        await conn.CloseAsync();
+                    }
+                }
+                return response;
             }
         }
     }
