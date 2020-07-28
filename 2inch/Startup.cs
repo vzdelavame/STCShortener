@@ -30,16 +30,18 @@ namespace _2inch
 
 
             app.UseEndpoints(endpoints =>
-            {
+            {                      
 
                 endpoints.MapGet("/", async context =>
                 {
                     await context.Response.WriteAsync("Hello World!");
                 });
+
                 endpoints.MapGet("/admin", async context =>
                 {
                     await context.Response.WriteAsync("ADMIN PAGE!");
                 });
+
                 endpoints.MapGet("/{name:alpha}", async context =>
                 {
                     var name = context.Request.RouteValues["name"];

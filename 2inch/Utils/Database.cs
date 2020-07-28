@@ -11,23 +11,23 @@ namespace _2inch
     {
 
         private static string SQL_CONNECTION_STRING = "sem vloz connection string";
+        
         public static string getLongLink(string shortLink)
         {
-            using (SqlConnection connection = new SqlConnection(SQL_CONNECTION_STRING)) {
-                SqlCommand command = new SqlCommand(null, connection);
-                command.CommandText = "SELECT * FROM links_table WHERE short_link = '@link'";
-                command.Parameters.Add(new SqlParameter("@link", shortLink));
-                command.Prepare();
-
-                SqlDataAdapter sda = new SqlDataAdapter(command);
-                DataTable dtbl = new DataTable();
-                sda.Fill(dtbl);
-                if (dtbl.Rows.Count == 1)
+            using (SqlConnection connection = new SqlConnection(SQL_CONNECTION_STRING)) 
+            {
+                using (SqlCommand command = new SqlCommand(null, connection))
                 {
-                    foreach (DataRow row in dtbl.Rows)
+                    command.CommandText = "SELECT long_link FROM links_table WHERE short_link = '@link'";
+                    command.Parameters.Add(new SqlParameter("@link", shortLink));
+                    command.Prepare();
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        string long_link = row["long_link"].ToString();
-                        return long_link;
+                        if(reader.Read()) 
+                        {
+                            string longLink = reader.GetString(0);
+                            return longLink;
+                        }
                     }
                 }
                 return null;
