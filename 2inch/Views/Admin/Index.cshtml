@@ -1,44 +1,63 @@
-﻿@model _2inch.Models.Auth; 
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-<!Doctype html>
-
+﻿@page
+@model _2inch.Models.Auth; 
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta name="testhead" content="width-device-width" />
-        <title>AdminTest</title>
-    </head>
-
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="utf-8">
+    	<title>Login - ŠTC Shortener</title>
+    	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+        <link rel="stylesheet" href="~/css/login.css">
+        <link rel="stylesheet" href="~/css/font-awesome.min.css">
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
     <body>
-        @using (Html.BeginForm("Login", "Admin", FormMethod.Post))
-        {
-            @if (ViewBag.Passed == false)
-            {
-                <p>Incorrect Credentials!</p>
-            }
-            <table cellpadding="0" cellspacing="0">
-                <tr>
-                    <th colspan="2" align="center">Login Credentials</th>
-                </tr>
-                <tr>
-                    <td>Login Username:</td>
-                    <td>
-                        @Html.TextBoxFor(M => M.Name)
-                    </td>
-                </tr>
-                <tr>
-                    <td>Login Password:</td>
-                    <td>
-                        @Html.PasswordFor(M => M.Pass)
-                    </td>
-                </tr>
-                <tr>
-                    <td><input type="submit" value="Enter"/></td>
-                </tr>
-            </table>
-        }
+        <div id="app" v-cloak>
+            <section class="hero is-fullheight" style="background-color: #20bf55;">
+                <div class="hero-body">
+                    <div class="container">
+                        <div class="columns is-centered">
+                            <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+                                @using (Html.BeginForm("Login", "Admin", FormMethod.Post, new {@class = "box"}))
+                                {
+                                    <div class="field">
+                                        <p style="text-align: center;">Admin login - ŠTC Shortener</p>
+                                    </div>
+                                    @if (ViewBag.Passed == false)
+                                    {
+                                        <div class="field">
+                                            <p>Incorrect Credentials!</p>
+                                        </div>
+                                    }
+                                    <div class="field">
+                                        <label for="" class="label">Email</label>
+                                        <div class="control has-icons-left">
+                                            @Html.TextBoxFor(M => M.Name, new { @class = "input", required="required"})
+                                            <span class="icon is-small is-left">
+                                            <i class="fa fa-envelope"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label for="" class="label">Password</label>
+                                        <div class="control has-icons-left">
+                                            @Html.PasswordFor(M => M.Pass, new { @class = "input", required="required"})
+                                            <span class="icon is-small is-left">
+                                            <i class="fa fa-lock"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <input class="button is-success" type="submit" value="Login"/>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <script src="~/js/index.js"></script>
     </body>
 </html>
