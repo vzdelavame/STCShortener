@@ -33,10 +33,15 @@ namespace _2inch
                     await context.Response.WriteAsync("Hello World!");
                 });
 
-                endpoints.MapGet("/admin", async context =>
-                {
-                    await context.Response.WriteAsync("ADMIN PAGE!");
-                });
+                endpoints.MapControllerRoute(
+                    name: "NotFoundRoute",
+                    pattern: "/404",
+                    defaults: new { controller = "404", action = "Index" });
+
+                endpoints.MapControllerRoute(
+                    name: "Admin",
+                    pattern: "/Admin",
+                    defaults: new { controller = "Admin", action = "Index" });
 
                 endpoints.MapGet("/{name:alpha}", async context =>
                 {
@@ -44,7 +49,7 @@ namespace _2inch
                     string url = Convert.ToString(name);
                     string final = Database.getLongLink(url);
                     if(final == null) {
-                        await context.Response.WriteAsync("404");
+                        context.Response.Redirect("/Admin");
                         return;
                     }
                     context.Response.Redirect(final);
