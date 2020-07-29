@@ -9,7 +9,8 @@ namespace _2inch.Utils
 {
     public class Database
     {
-        private static readonly string SQL_CONNECTION_STRING = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_Connection_String");
+        //private static readonly string SQL_CONNECTION_STRING = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_Connection_String");
+        private static readonly string SQL_CONNECTION_STRING = "Server=tcp:shortener-db-server.database.windows.net,1433;Initial Catalog=shortener-db;Persist Security Info=False;User ID=LetnaSkola;Password=10Inches;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
         public async static Task<string> GetLongString(string shortLink)
         {
@@ -100,11 +101,11 @@ namespace _2inch.Utils
 
                         foreach (DataRow row in table.Rows)
                         {
-                            int id = int.Parse((string)row["id"]);
+                            int id = int.Parse(row["id"].ToString());
                             string createdBy = row["createdBy"].ToString();
                             string longLink = row["longLink"].ToString();
                             string shortLink = row["shortLink"].ToString();
-                            int click = int.Parse((string)row["click"]);
+                            int click = int.Parse(row["clicked"].ToString());
                             string creationTime = row["creationTime"].ToString();
 
                             Models.Link linkObj = new Models.Link(id, createdBy, longLink, shortLink, click, creationTime);

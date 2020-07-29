@@ -7,7 +7,7 @@ namespace _2inch.Models
 {
     public class Link
     {
-        public int id {get; set; }
+        public int id { get ; set; }
         public string createdBy { get; set; }
         public string longLink { get; set; }
         public string shortLink { get; set; }
@@ -16,12 +16,17 @@ namespace _2inch.Models
 
         public Link(int ID, string CreatedBy, string LongLink, string ShortLink, int Clicked, string CreationTime)
         {
-            id = ID;
-            createdBy = CreatedBy;
-            longLink = LongLink;
-            shortLink = ShortLink;
-            clicked = Clicked;
-            creationTime = CreationTime;
+            this.id = ID;
+            this.createdBy = CreatedBy;
+            this.longLink = LongLink;
+            this.shortLink = ShortLink;
+            this.clicked = Clicked;
+            this.creationTime = CreationTime;
+        }
+
+        public Link()
+        {
+
         }
     }
 }

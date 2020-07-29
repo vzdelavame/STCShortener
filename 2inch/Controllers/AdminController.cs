@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using _2inch.Models;
 using _2inch.Utils;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,8 +26,11 @@ namespace _2inch.Controllers
             return View("AddLink");
         }
 
-        public IActionResult EditLinks()
+        public async Task<IActionResult> EditLinks()
         {
+            List<Models.Link> LinkList = await Database.GetAllLinks();
+            ViewBag.Links = LinkList;
+
             return View("EditLinks");
         }
 
@@ -44,7 +48,7 @@ namespace _2inch.Controllers
             newlink.createdBy = "Testik";
             newlink.clicked = 0;
             await Database.InsertLink(newlink); 
-            return View("AdminPanel");
+            return View("AddLink");
         }
     }
 }

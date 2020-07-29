@@ -1,95 +1,100 @@
-@page
+﻿@page
+@model _2inch.Models.Link
 <!DOCTYPE html>
 <html class="has-navbar-fixed-top">
-	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta charset="utf-8">
-    	<title>Edit Links - ŠTC Shortener</title>
-    	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
-    	<link rel="stylesheet" href="~/css/index.css">
-		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-	</head>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>Edit Links - ŠTC Shortener</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    <link rel="stylesheet" href="~/css/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
 <body>
-	<div id="app">
-		<nav class="navbar is-success is-fixed-top" role="navigation" aria-label="main navigation">
-			<div class="navbar-brand">
-			    <a class="navbar-item" href="http://stcmicrosoft.azurewebsites.net/">
-			      	<img src="~/images/STCBLACK.png" width="82" height="28">
-			    </a>
+    <div id="app">
+        <nav class="navbar is-success is-fixed-top" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="http://stcmicrosoft.azurewebsites.net/">
+                    <img src="~/images/STCBLACK.png" width="82" height="28">
+                </a>
 
-			    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" :class="{'is-active': activeBurger}" **@click.prevent="showBurger()">
-				    <span aria-hidden="true"></span>
-				    <span aria-hidden="true"></span>
-				    <span aria-hidden="true"></span>
-			    </a>
-			</div>
+                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" :class="{'is-active': activeBurger}" **@click.prevent="showBurger()">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
 
-			<div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': activeBurger}">
-			    <div class="navbar-start">
+            <div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': activeBurger}">
+                <div class="navbar-start">
                     <a class="navbar-item" href=" @Url.ActionLink("AdminPanel", "Admin") ">
                         Home
                     </a>
 
-                   <a class="navbar-item" href=" @Url.ActionLink("AddLink", "Admin") ">
-					   Add Link
-                   </a>
+                    <a class="navbar-item" href=" @Url.ActionLink("AddLink", "Admin") ">
+                        Add Link
+                    </a>
 
                     <a class="navbar-item" href=" @Url.ActionLink("EditLinks", "Admin") ">
                         Edit Links
                     </a>
-			    </div>
+                </div>
 
-			    <div class="navbar-end">
-			      	<div class="navbar-item">
-			        	<div class="buttons">
-			          		<a class="button is-danger">
-			            		Log out
-			          		</a>
-			        	</div>
-			      	</div>
-			    </div>
-			</div>
-		</nav>
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a class="button is-danger">
+                                Log out
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
 
-		<section class="hero">
-			<div class="hero-body">
-				<div class="container">
+        <section class="hero">
+            <div class="hero-body">
+                <div class="container">
                     <div class="columns">
-						<div class="column">
-							<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-							  <thead>
-							    <tr>
-							      <th>Index</th>
-							      <th>Short Link</th>
-							      <th>Long Link</th>
-							      <th>Created by</th>
-							      <th>Time of creation</th>
-							      <th>Clicked</th>
-							      <th>Edit</th>
-							      <th>Delete</th>
-							    </tr>
-							  </thead>
-							  <tbody>
-							    <tr>
-							      <th>1</th>
-							      <td>shortenedLink</td>
-							      <td>longLink</td>
-							      <td>Tadeáš D</td>
-							      <td>01.01.1970 02:00:00</td>
-							      <td>0</td>
-							      <td><i class="fas fa-edit"></i></td>
-							      <td><i class="fas fa-trash-alt"></i></td>
-							    </tr>
-							  </tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
+                        <div class="column">
+                            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                                <thead>
+                                    <tr>
+                                        <th>Index</th>
+                                        <th>Short Link</th>
+                                        <th>Long Link</th>
+                                        <th>Created by</th>
+                                        <th>Time of creation</th>
+                                        <th>Clicked</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (_2inch.Models.Link link in ViewBag.Links)
+                                    {
+                                        <tr>
+                                            <th>@link.id</th>
+                                            <td>@link.shortLink</td>
+                                            <td>@link.longLink</td>
+                                            <td>@link.createdBy</td>
+                                            <td>@link.creationTime</td>
+                                            <td>@link.clicked</td>
+                                            <td><i class="fas fa-edit"></i></td>
+                                            <td><i class="fas fa-trash-alt"></i></td>
+                                        </tr>
 
-	<script src="~/js/index.js"></script>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </section>
+
+    <script src="~/js/index.js"></script>
 </body>
 </html>
