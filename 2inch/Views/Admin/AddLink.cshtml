@@ -1,88 +1,90 @@
-@page
+﻿@page
+@model _2inch.Models.Link
 <!DOCTYPE html>
 <html class="has-navbar-fixed-top">
-	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta charset="utf-8">
-    	<title>Add Link - ŠTC Shortener</title>
-    	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
-    	<link rel="stylesheet" href="~/css/index.css">
-		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-	</head>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>Add Link - ŠTC Shortener</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    <link rel="stylesheet" href="~/css/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
 <body>
-	<div id="app">
-		<nav class="navbar is-success is-fixed-top" role="navigation" aria-label="main navigation">
-			<div class="navbar-brand">
-			    <a class="navbar-item" href="http://stcmicrosoft.azurewebsites.net/">
-			      	<img src="~/images/STCBLACK.png" width="82" height="28">
-			    </a>
+    <div id="app">
+        <nav class="navbar is-success is-fixed-top" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="http://stcmicrosoft.azurewebsites.net/">
+                    <img src="~/images/STCBLACK.png" width="82" height="28">
+                </a>
 
-			    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" :class="{'is-active': activeBurger}" **@click.prevent="showBurger()">
-				    <span aria-hidden="true"></span>
-				    <span aria-hidden="true"></span>
-				    <span aria-hidden="true"></span>
-			    </a>
-			</div>
+                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" :class="{'is-active': activeBurger}" **@click.prevent="showBurger()">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
 
-			<div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': activeBurger}">
-			    <div class="navbar-start">
+            <div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': activeBurger}">
+                <div class="navbar-start">
                     <a class="navbar-item" href=" @Url.ActionLink("AdminPanel", "Admin") ">
                         Home
                     </a>
 
-                   <a class="navbar-item" href=" @Url.ActionLink("AddLink", "Admin") ">
-					   Add Link
-                   </a>
+                    <a class="navbar-item" href=" @Url.ActionLink("AddLink", "Admin") ">
+                        Add Link
+                    </a>
 
                     <a class="navbar-item" href=" @Url.ActionLink("EditLinks", "Admin") ">
                         Edit Links
                     </a>
-			    </div>
+                </div>
 
-			    <div class="navbar-end">
-			      	<div class="navbar-item">
-			        	<div class="buttons">
-			          		<a class="button is-danger">
-			            		Log out
-			          		</a>
-			        	</div>
-			      	</div>
-			    </div>
-			</div>
-		</nav>
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a class="button is-danger">
+                                Log out
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+            <section class="hero add-link">
+                <div class="hero-body">
+                    <div class="container">
+                        <div class="columns is-centered">
+                            <div class="column is-half">
+                                @using (Html.BeginForm("AddLinks", "Admin", FormMethod.Post))
+                                {
+                                    <div class="field">
+                                        <label class="label">Short link</label>
+                                        <div class="control">
+                                            @Html.TextBoxFor(M => M.shortLink, new { @class = "input", required = "required", @placeholder = "student.ms/" })
+                                        </div>
+                                    </div>
 
-		<section class="hero add-link">
-			<div class="hero-body">
-				<div class="container">
-                    <div class="columns is-centered">
-						<div class="column is-half">
-							<div class="field">
-							  	<label class="label">Short link</label>
-							  		<div class="control">
-							    		<input class="input" type="text" placeholder="student.ms/">
-							  		</div>
-								</div>
+                                    <div class="field">
+                                        <label class="label">Long link</label>
+                                        <div class="control">
+                                            @Html.TextBoxFor(M => M.longLink, new { @class = "input", required = "required", @placeholder = "https://..." })
+                                        </div>
+                                    </div>
+                                    <div class="field is-grouped">
+                                        <div class="control">
+                                            <button class="button is-link">Submit</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-								<div class="field">
-							  		<label class="label">Long link</label>
-							  		<div class="control">
-							    		<input class="input" type="text" placeholder="https://...">
-							  		</div>
-								</div>
-
-								<div class="field is-grouped">
-							  	<div class="control">
-							    	<button class="button is-link">Submit</button>
-							  	</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<script src="~/js/index.js"></script>
+        <script src="~/js/index.js"></script>
 </body>
 </html>
