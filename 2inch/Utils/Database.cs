@@ -78,5 +78,25 @@ namespace _2inch.Utils
                 }
             }
         }
+
+        public async static Task GetAllLinks()
+        {
+            List<Models.Link> LinkList = new List<Models.Link>();
+
+            using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
+            {
+                string queryString = "SELECT FROM links (id, createdBy, shortLink, longLink, clicked, creationTime)";
+                queryString += " VALUES(@id, @createdBy, @shortLink, @longLink, @clicked, @creationTime)";
+
+                await conn.OpenAsync();
+
+                using (SqlCommand getAll = new SqlCommand(queryString, conn))
+                {
+                    getAll.Parameters.AddWithValue("@id", SqlDbType.Int);
+                    getAll.Parameters.AddWithValue("@createdBy", SqlDbType.Text);
+                    getAll.Parameters.AddWithValue("@shortLink", SqlDbType.Text);
+                }
+            }
+        }
     }
 }
