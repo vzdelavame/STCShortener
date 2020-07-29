@@ -41,7 +41,7 @@ namespace _2inch
                 endpoints.MapControllerRoute(
                     name: "Admin",
                     pattern: "/Admin",
-                    defaults: new { controller = "Admin", action = "Index" });
+                    defaults: new { controller = "Admin", action = "Login" });
 
                 endpoints.MapGet("/{name:alpha}", async context =>
                 {

@@ -4,12 +4,26 @@
   height: 100%;
   text-align: center;
   width: 100%;
-  margin-top: 1%;
 }
 
 .notfound-404 h1 {
   font-family: 'Passion One', cursive;
   font-size: 450px;
+  font-weight: 400;
+  background-color: #bbbbbb;
+  background-image: -webkit-linear-gradient(bottom right, #20bf55 0%, #80cc28 95%);
+  background-image: -o-linear-gradient(bottom right, #20bf55 0%, #80cc28 95%);
+  background-image: linear-gradient(to top left, #20bf55 0%, #80cc28 95%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: cover;
+  background-position: center;
+  margin: 20px;
+}
+
+.notfound-404 h2 {
+  font-family: 'Passion One', cursive;
+  font-size: 100px;
   font-weight: 400;
   background-color: #bbbbbb;
   background-image: -webkit-linear-gradient(bottom right, #20bf55 0%, #80cc28 95%);
@@ -29,5 +43,9 @@
 
     .notfound .notfound-404 h1 {
       font-size: 200px;
+    }
+
+    .notfound .notfound-404 h2 {
+      font-size: 50px;
     }
 }

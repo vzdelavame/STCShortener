@@ -9,13 +9,13 @@ namespace _2inch.Controllers
 {
     public class AdminController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(Models.Auth auth) //Script for Login
+        public async Task<IActionResult> Login(Models.Auth auth) //Script for Login
         {
             if (await Database.VerifyAdminCredentials(auth)) return View("AdminPanel"); //Redirects to AdminPanel if returns True
             ViewBag.Passed = false; //Should Update Admin login with 'Incorrect Credentials'
