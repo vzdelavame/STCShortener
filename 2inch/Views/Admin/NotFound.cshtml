@@ -1,4 +1,4 @@
-﻿@page
+@page
 @{
 
 	if(!User.Identity.IsAuthenticated) {
@@ -13,7 +13,7 @@
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta charset="utf-8">
-    	<title>Admin Panel - ŠTC Shortener</title>
+    	<title>Not Found - ŠTC Shortener</title>
     	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
     	<link rel="stylesheet" href="~/css/index.css">
 		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -35,7 +35,7 @@
 			</div>
 
 			<div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': activeBurger}">
-                <div class="navbar-start">
+			    <div class="navbar-start">
                     <a class="navbar-item" href=" @Url.ActionLink("AdminPanel", "Admin") ">
                         Home
                     </a>
@@ -47,7 +47,7 @@
                     <a class="navbar-item" href=" @Url.ActionLink("EditLinks", "Admin") ">
                         Edit Links
                     </a>
-                </div>
+			    </div>
 
 			    <div class="navbar-end">
 			      	<div class="navbar-item">
@@ -60,6 +60,23 @@
 			    </div>
 			</div>
 		</nav>
+
+		<section class="hero add-link">
+			<div class="hero-body">
+                <div class="container">
+                    <div class="columns is-centered">
+                        <div class="column is-4-widescreen is-centered text-is-centered" style="text-align: center;">
+							<div class="field">
+							  	<h3 class="subtitle is-2 is-centered">404</h3>
+								<h3 class="subtitle is-4 is-centered">Oops! Something went wrong.</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
 	<script src="~/js/index.js"></script>
 </body>
 </html>

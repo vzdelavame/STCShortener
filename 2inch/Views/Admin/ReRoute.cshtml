@@ -1,0 +1,39 @@
+@page
+@{
+    
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>ReRoute - ŠTC Shortener</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    <link rel="stylesheet" href="~/css/login.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+</head>
+<body>
+    <div>
+        <section class="hero is-fullheight" style="background-color: #20bf55;">
+            <div class="hero-body">
+                <div class="container">
+                    <div class="columns is-centered">
+                        <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+                                <div class="field box">
+                                    <h3 class="subtitle is-5">You are being redirected...</h3>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script>
+        setInterval(reroute, 500);
+
+        function reroute() {
+            window.location = "/Admin/AdminPanel";
+        }
+    </script>
+</body>
+</html>

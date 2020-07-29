@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace _2inch
 {
@@ -12,7 +13,20 @@ namespace _2inch
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddAuthentication(options => {
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                
+            }).AddCookie(options => { 
+                options.LoginPath = "/Admin/Index";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+            });
+
+            services.AddControllersWithViews().AddRazorPagesOptions(options => {
+                options.Conventions.AuthorizeFolder("/Admin/"); 
+                options.Conventions.AllowAnonymousToPage("/Admin/Index");
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -25,6 +39,9 @@ namespace _2inch
             app.UseRouting();
 
             app.UseStaticFiles();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
@@ -52,6 +69,11 @@ namespace _2inch
                         return;
                     }
                     context.Response.Redirect(final);
+                });
+
+                endpoints.MapGet("/Admin/{name:alpha}", async context =>
+                {
+                    context.Response.Redirect("/admin/NotFoundPage");
                 });
             });
         }

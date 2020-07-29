@@ -1,4 +1,13 @@
 @page
+@{
+
+	if(!User.Identity.IsAuthenticated) {
+		Redirect("/admin/login");
+		return;
+	}
+
+
+}
 <!DOCTYPE html>
 <html class="has-navbar-fixed-top">
 	<head>
@@ -43,7 +52,7 @@
 			    <div class="navbar-end">
 			      	<div class="navbar-item">
 			        	<div class="buttons">
-			          		<a class="button is-danger">
+			          		<a class="button is-danger" href=" @Url.ActionLink("Logout", "Admin") ">
 			            		Log out
 			          		</a>
 			        	</div>
