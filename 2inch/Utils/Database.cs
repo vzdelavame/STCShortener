@@ -12,7 +12,7 @@ namespace _2inch.Utils
 
         private static string SQL_CONNECTION_STRING = "Server=tcp:zaverecnyprojekt.database.windows.net,1433;Initial Catalog = shortenerletnaskola; Persist Security Info=False;User ID = andrejmokris; Password=ZaverecnapracaSTC2019;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout = 30;";
         
-        public static string getLongLink(string shortLink)
+        public async static Task<string> GetLongString(string shortLink)
         {
             using (SqlConnection connection = new SqlConnection(SQL_CONNECTION_STRING)) 
             {
@@ -21,9 +21,9 @@ namespace _2inch.Utils
                 {
                     command.CommandText = "SELECT * FROM links_table WHERE short_link = @link";
                     command.Parameters.AddWithValue("@link", shortLink);
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if(reader.Read()) 
+                        if(await reader.ReadAsync()) 
                         {
                             string longLink = reader.GetString(1);
                             return longLink;

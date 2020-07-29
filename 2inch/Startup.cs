@@ -47,7 +47,7 @@ namespace _2inch
                 {
                     var name = context.Request.RouteValues["name"];
                     string url = Convert.ToString(name);
-                    string final = Database.getLongLink(url);
+                    string final = await Database.GetLongString(url);
                     if(final == null) {
                         context.Response.Redirect("/404");
                         return;
