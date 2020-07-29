@@ -19,13 +19,14 @@ namespace _2inch.Utils
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(null, connection))
                 {
-                    command.CommandText = "SELECT longLink FROM links WHERE shortLink = @link";
+                    command.CommandText = "SELECT * FROM links WHERE shortLink = @link; UPDATE links SET clicked = @clicked WHERE shortlink = @link";
                     command.Parameters.AddWithValue("@link", shortLink);
+                    command.Parameters.AddWithValue("@clicked", clicked+1); //Should Update
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
                         if(await reader.ReadAsync()) 
                         {
-                            string longLink = reader.GetString(0);
+                            string longLink = reader.GetString(1);
                             return longLink;
                         }
                     }
