@@ -1,7 +1,7 @@
 ﻿@page
 @model _2inch.Models.Auth
 @{
-    
+
 }
 <!DOCTYPE html>
 <html>
@@ -36,6 +36,20 @@
                                             You have entered an invalid password or email!
                                         </div>
                                     </article>
+                                }
+                                @if (ViewBag.loggedOut != null)
+                                {
+                                    <article class="message is-info field">
+                                        <div class="message-header">
+                                            <p>Logged out</p>
+                                        </div>
+                                        <div class="message-body">
+                                            You have logged out!
+                                        </div>
+                                    </article>
+                                    {
+                                        ViewBag.loggedOut = null;
+                                    }
                                 }
                                 <div class="field">
                                     <label for="" class="label">Email</label>

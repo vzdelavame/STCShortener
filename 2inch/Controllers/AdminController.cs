@@ -44,6 +44,7 @@ namespace _2inch.Controllers
         {
             if(!User.Identity.IsAuthenticated) return View("Login");
 
+            ViewBag.loggedOut = true;
             await HttpContext.SignOutAsync();
 
             return View("Login");
