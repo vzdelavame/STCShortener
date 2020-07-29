@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using _2inch.Models;
 using _2inch.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
@@ -30,9 +31,12 @@ namespace _2inch.Controllers
             return View("AddLink");
         }
 
-        public IActionResult EditLinks()
+        public async Task<IActionResult> EditLinks()
         {
             if(!User.Identity.IsAuthenticated) return View("Login");
+            List<Models.Link> LinkList = await Database.GetAllLinks();
+            ViewBag.Links = LinkList;
+
             return View("EditLinks");
         }
 
@@ -66,5 +70,14 @@ namespace _2inch.Controllers
             ViewBag.Passed = false; //Should Update Admin login with 'Incorrect Credentials'
             return View("Login"); //Redirection to the same page if AdminLog.CheckCred(auth) returns False
         } 
+
+        [HttpPost]
+        public async Task<IActionResult> AddLinks(Models.Link newlink)
+        {
+            newlink.createdBy = User.Identity.Name;
+            newlink.clicked = 0;
+            await Database.InsertLink(newlink); 
+            return View("AddLink");
+        }
     }
 }

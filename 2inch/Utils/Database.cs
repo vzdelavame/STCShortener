@@ -4,14 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
-using System.Configuration;
 
 namespace _2inch.Utils
 {
     public class Database
     {
         private static readonly string SQL_CONNECTION_STRING = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_Connection_String");
-
+        
         public async static Task<string> GetLongString(string shortLink)
         {
             
@@ -62,8 +61,8 @@ namespace _2inch.Utils
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
                 //Toto by malo vložiť long_link a short_link, tieto názvy stĺpcov som používal podľa predošlích funkcii.
-                string queryString = "INSERT INTO links (createdBy, shortLink, longLink)";
-                queryString += " VALUES(@createdBy, @longLink, @shortLink)";
+                string queryString = "INSERT INTO links (createdBy, shortLink, longLink, clicked)";
+                queryString += " VALUES(@createdBy, @shortLink, @longLink, @clicked)";
 
                 await conn.OpenAsync();
 
@@ -72,10 +71,49 @@ namespace _2inch.Utils
                     insert.Parameters.AddWithValue("@createdBy", link.createdBy);
                     insert.Parameters.AddWithValue("@longLink", link.longLink);
                     insert.Parameters.AddWithValue("@shortLink", link.shortLink);
+                    insert.Parameters.AddWithValue("@clicked", link.clicked);
 
                     await insert.ExecuteNonQueryAsync();
                     await conn.CloseAsync();
                 }
+            }
+        }
+
+        public async static Task<List<Models.Link>> GetAllLinks()
+        {
+            List<Models.Link> LinkList = new List<Models.Link>();
+
+            using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
+            {
+                string queryString = "SELECT * FROM links";
+
+                await conn.OpenAsync();
+
+                using (SqlCommand getAll = new SqlCommand(queryString, conn))
+                {
+                    
+                    using (SqlDataAdapter Adapter = new SqlDataAdapter(getAll))
+                    {
+                        DataTable table = new DataTable();
+
+                        Adapter.Fill(table);
+
+                        foreach (DataRow row in table.Rows)
+                        {
+                            int id = int.Parse(row["id"].ToString());
+                            string createdBy = row["createdBy"].ToString();
+                            string longLink = row["longLink"].ToString();
+                            string shortLink = row["shortLink"].ToString();
+                            int click = int.Parse(row["clicked"].ToString());
+                            string creationTime = row["creationTime"].ToString();
+
+                            Models.Link linkObj = new Models.Link(id, createdBy, longLink, shortLink, click, creationTime);
+
+                            LinkList.Add(linkObj);
+                        }
+                    }
+                }
+                return LinkList;
             }
         }
     }
