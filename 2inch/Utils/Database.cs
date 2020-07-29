@@ -11,7 +11,8 @@ namespace _2inch.Utils
     public class Database
     {
 
-        private static readonly string SQL_CONNECTION_STRING = ConfigurationManager.ConnectionStrings["Connection_String"].ConnectionString;
+        //private static readonly string SQL_CONNECTION_STRING = ConfigurationManager.ConnectionStrings["Connection_String"].ConnectionString;
+        private static readonly string SQL_CONNECTION_STRING = Environment.GetEnvironmentVariable("Connection_String");
         //Malo by to ťahať z Web App Settings!1!!1!!
         
         public async static Task<string> GetLongString(string shortLink)
