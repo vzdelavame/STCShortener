@@ -26,19 +26,22 @@
 			</div>
 
 			<div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': activeBurger}">
-			    <div class="navbar-start">
+                <div class="navbar-start">
                     <a class="navbar-item" href="/Admin">
-			        	Home
-			      	</a>
+                        Home
+                    </a>
 
-			      	<a class="navbar-item" href="/Admin/AddLink">
-			        	Add Link
-			      	</a>
+                    @using (Html.BeginForm("Redirect", "Admin"))
+                    {
 
-			      	<a class="navbar-item" href="/Admin/EditLinks">
-			        	Edit Links
-			      	</a>
-			    </div>
+                        <input type="submit" value="Create" />
+
+                    }
+
+                    <a class="navbar-item" href="/Admin/EditLinks">
+                        Edit Links
+                    </a>
+                </div>
 
 			    <div class="navbar-end">
 			      	<div class="navbar-item">
