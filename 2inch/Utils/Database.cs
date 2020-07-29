@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
-using System.Configuration;
 
 namespace _2inch.Utils
 {
@@ -63,7 +62,7 @@ namespace _2inch.Utils
             {
                 //Toto by malo vložiť long_link a short_link, tieto názvy stĺpcov som používal podľa predošlích funkcii.
                 string queryString = "INSERT INTO links (createdBy, shortLink, longLink, clicked)";
-                queryString += " VALUES(@createdBy, @longLink, @shortLink, @clicked)";
+                queryString += " VALUES(@createdBy, @shortLink, @longLink, @clicked)";
 
                 await conn.OpenAsync();
 
