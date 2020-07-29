@@ -27,17 +27,17 @@
 
 			<div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': activeBurger}">
 			    <div class="navbar-start">
-                    <a class="navbar-item" href="/Admin">
-			        	Home
-			      	</a>
+                    <a class="navbar-item" href=" @Url.ActionLink("AdminPanel", "Admin") ">
+                        Home
+                    </a>
 
-			      	<a class="navbar-item" href="/Admin/AddLink">
-			        	Add Link
-			      	</a>
+                   <a class="navbar-item" href=" @Url.ActionLink("AddLink", "Admin") ">
+					   Add Link
+                   </a>
 
-			      	<a class="navbar-item" href="/Admin/EditLinks">
-			        	Edit Links
-			      	</a>
+                    <a class="navbar-item" href=" @Url.ActionLink("EditLinks", "Admin") ">
+                        Edit Links
+                    </a>
 			    </div>
 
 			    <div class="navbar-end">

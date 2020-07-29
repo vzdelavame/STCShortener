@@ -12,7 +12,7 @@ namespace _2inch.Utils
     {
 
         private const string sqlConnString = "Connection_String";
-        private static readonly string SQL_CONNECTION_STRING = "";
+        private static readonly string SQL_CONNECTION_STRING = "Server=tcp:shortener-db-server.database.windows.net,1433;Initial Catalog=shortener-db;Persist Security Info=False;User ID=LetnaSkola;Password=10Inches;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
         public async static Task<string> GetLongString(string shortLink)
         {

@@ -9,15 +9,25 @@ namespace _2inch.Controllers
 {
     public class AdminController : Controller
     {
+
+        public IActionResult AdminPanel()
+        {
+            return View("AdminPanel");
+        }
+
         public IActionResult Login()
         {
             return View();
         }
 
-        [HttpPost]
-        public IActionResult Redirect() //Script for Login
+        public IActionResult AddLink()
         {
-            return View("AddLink"); //Redirection to the same page if AdminLog.CheckCred(auth) returns False
+            return View("AddLink");
+        }
+
+        public IActionResult EditLinks()
+        {
+            return View("EditLinks");
         }
 
         [HttpPost]
