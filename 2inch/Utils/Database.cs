@@ -22,13 +22,13 @@ namespace _2inch.Utils
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(null, connection))
                 {
-                    command.CommandText = "SELECT * FROM links_table WHERE short_link = @link";
+                    command.CommandText = "SELECT longLink FROM links WHERE shortLink = @link";
                     command.Parameters.AddWithValue("@link", shortLink);
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
                         if(await reader.ReadAsync()) 
                         {
-                            string longLink = reader.GetString(1);
+                            string longLink = reader.GetString(0);
                             return longLink;
                         }
                     }
@@ -42,7 +42,7 @@ namespace _2inch.Utils
             bool response = false;
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
-                string queryString = $"SELECT * FROM admin_table WHERE email=@user";
+                string queryString = $"SELECT * FROM userAccounts WHERE userEmail = @user";
                 using (SqlCommand command = new SqlCommand(queryString, conn))
                 {
                     command.Parameters.AddWithValue("@user", login.Name);
@@ -65,15 +65,16 @@ namespace _2inch.Utils
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
                 //Toto by malo vložiť long_link a short_link, tieto názvy stĺpcov som používal podľa predošlích funkcii.
-                string queryString = "INSERT INTO links_table (long_link, short_link)";
-                queryString += " VALUES(@long_link, @short_link)";
+                string queryString = "INSERT INTO links (createdBy, shortLink, longLink)";
+                queryString += " VALUES(@createdBy, @longLink, @shortLink)";
 
                 await conn.OpenAsync();
 
                 using (SqlCommand insert = new SqlCommand(queryString, conn))
                 {
-                    insert.Parameters.AddWithValue("@long_link", link.longLink);
-                    insert.Parameters.AddWithValue("@short_link", link.shortLink);
+                    insert.Parameters.AddWithValue("@createdBy", link.createdBy);
+                    insert.Parameters.AddWithValue("@longLink", link.longLink);
+                    insert.Parameters.AddWithValue("@shortLink", link.shortLink);
 
                     await insert.ExecuteNonQueryAsync();
                     await conn.CloseAsync();
