@@ -11,8 +11,9 @@ namespace _2inch.Utils
     public class Database
     {
 
-        private const string sqlConnString = "Connection_String";
-        private static readonly string SQL_CONNECTION_STRING = "";
+        //private const string sqlConnString = "Connection_String";
+        private static readonly string SQL_CONNECTION_STRING = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_Connection_String");
+        //private static readonly string SQL_CONNECTION_STRING = ConfigurationManager.ConnectionStrings[sqlConnString].ToString();
 
         public async static Task<string> GetLongString(string shortLink)
         {
