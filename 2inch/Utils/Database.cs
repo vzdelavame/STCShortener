@@ -40,10 +40,9 @@ namespace _2inch.Utils
 
                 string queryString = "UPDATE links SET clicked = @clicked WHERE id = @id";
 
-                using (SqlCommand changeClick = new SqlCommand(queryString, connection)) //Potentially Nuclear Material, Handle With Care
+                using (SqlCommand changeClick = new SqlCommand(queryString, connection))
                 {
-                    int clickedincr = clicked++;
-                    changeClick.Parameters.AddWithValue("@clicked", clickedincr);
+                    changeClick.Parameters.AddWithValue("@clicked", clicked+1);
                     changeClick.Parameters.AddWithValue("@id", id);
 
                     await changeClick.ExecuteNonQueryAsync();
