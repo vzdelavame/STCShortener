@@ -59,6 +59,11 @@ namespace _2inch
                     name: "Admin",
                     pattern: "{controller=Admin}/{action=Login}");
 
+                endpoints.MapGet("/admin", async context =>
+                {
+                    context.Response.Redirect("/admin/Login");
+                });
+
                 endpoints.MapGet("/{name:alpha}", async context =>
                 {
                     var name = context.Request.RouteValues["name"];
