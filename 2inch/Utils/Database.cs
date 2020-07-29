@@ -43,10 +43,11 @@ namespace _2inch.Utils
             bool response = false;
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
-                string queryString = $"SELECT * FROM userAccounts WHERE userEmail = @user";
+                string queryString = $"SELECT * FROM userAccounts WHERE userEmail = @user AND userPassword = HASHBYTES('SHA2_512', @password)";
                 using (SqlCommand command = new SqlCommand(queryString, conn))
                 {
                     command.Parameters.AddWithValue("@user", login.Name);
+                    command.Parameters.AddWithValue("@password", login.Pass);
                     await conn.OpenAsync();
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
