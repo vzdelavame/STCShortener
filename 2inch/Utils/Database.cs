@@ -81,7 +81,7 @@ namespace _2inch.Utils
 
         public async static Task<List<Models.Link>> GetAllLinks()
         {
-            List<Models.Link> LinkList = new List<Models.Link>();
+            List<Models.Link> LinkList = new List<Models.Link>(); //List na vsetky rows
 
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
@@ -99,7 +99,7 @@ namespace _2inch.Utils
                         Adapter.Fill(table);
 
                         foreach (DataRow row in table.Rows)
-                        {
+                        { //Vyberame data z Table, vytvarame Objekty a populujeme ich informaciami
                             int id = int.Parse(row["id"].ToString());
                             string createdBy = row["createdBy"].ToString();
                             string longLink = row["longLink"].ToString();
@@ -109,11 +109,48 @@ namespace _2inch.Utils
 
                             Models.Link linkObj = new Models.Link(id, createdBy, longLink, shortLink, click, creationTime);
 
-                            LinkList.Add(linkObj);
+                            LinkList.Add(linkObj); //Pridavame do Listu
                         }
                     }
                 }
                 return LinkList;
+            }
+        }
+
+        public async static Task DeleteLink(Models.Link link)
+        {
+            using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
+            {
+                string queryString = "DELETE FROM links WHERE id = '@id'";
+
+                await conn.OpenAsync();
+
+                using (SqlCommand delete = new SqlCommand(queryString, conn))
+                {
+                    delete.Parameters.AddWithValue("@id", link.id);
+
+                    await delete.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public async static Task EditLink(Models.Link link)
+        {
+            using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
+            { //Možno by bolo dobré implementovať kontrolu toho či sa LoggedInUser = createdBy a ak nie, tak nepovoliť edit?
+                string queryString = "UPDATE links";
+                queryString += "SET shortLink = @short, longLink = @long Where id = '@id'";
+
+                await conn.OpenAsync();
+
+                using (SqlCommand edit = new SqlCommand(queryString, conn))
+                {
+                    edit.Parameters.AddWithValue("@short", link.shortLink);
+                    edit.Parameters.AddWithValue("@long", link.longLink);
+                    edit.Parameters.AddWithValue("@id", link.id);
+
+                    await edit.ExecuteNonQueryAsync();
+                }
             }
         }
     }
