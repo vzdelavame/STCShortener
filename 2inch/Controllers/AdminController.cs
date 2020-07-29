@@ -34,8 +34,7 @@ namespace _2inch.Controllers
         public async Task<IActionResult> EditLinks()
         {
             if(!User.Identity.IsAuthenticated) return View("Login");
-            List<Models.Link> LinkList = await Database.GetAllLinks();
-            ViewBag.Links = LinkList;
+            await reloadLinks();
 
             return View("EditLinks");
         }
@@ -75,6 +74,9 @@ namespace _2inch.Controllers
         [HttpPost]
         public async Task<IActionResult> AddLinks(Models.Link newlink)
         {
+            if(newlink.shortLink == null || newlink.longLink == null || newlink.shortLink.Count() <= 0 || newlink.longLink.Count() <= 0)
+                return View("AddLink");
+
             newlink.createdBy = User.Identity.Name;
             newlink.clicked = 0;
             ViewBag.Duple = await Database.CheckDuples(newlink.shortLink);
@@ -82,7 +84,49 @@ namespace _2inch.Controllers
             {
                 await Database.InsertLink(newlink);
             }
+            if(ModelState.IsValid)
+                ModelState.Clear();
             return View("AddLink");
         }
+
+        public async Task<IActionResult> EditSelectedLink(int id) {
+            Models.Link link = await Database.GetLinkById(id);
+
+            ViewBag.EditSelectedLink = link;
+            return View("EditLinks");
+        }
+
+        public async Task<IActionResult> DeleteSelectedLink(int id) {
+            await Database.DeleteLink(id);
+
+            await reloadLinks();
+
+            ViewBag.LinkDeleted = id;
+            return View("EditLinks");
+        }
+
+        public async Task<List<Models.Link>> reloadLinks() {
+            List<Models.Link> LinkList = await Database.GetAllLinks();
+            LocalDatabase.Links = LinkList;
+            return LinkList;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateSelectedLink(Models.Link link)
+        {
+            if(link.shortLink == null || link.longLink == null || link.shortLink.Count() <= 0 || link.longLink.Count() <= 0)
+                return View("EditLinks");
+
+            await Database.EditLink(link);
+
+            if(ModelState.IsValid)
+                ModelState.Clear();
+
+            ViewBag.Edited = link.id;
+
+            await reloadLinks();
+            return View("EditLinks");
+        }
+
     }
 }

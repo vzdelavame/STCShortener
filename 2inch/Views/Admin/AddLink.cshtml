@@ -69,17 +69,28 @@
                             <div class="column is-half">
                                 @using (Html.BeginForm("AddLinks", "Admin", FormMethod.Post))
                                 {
+                                    @if (ViewBag.Duple == true)
+                                    {
+                                        <article class="message is-info field">
+                                            <div class="message-header">
+                                                <p>Error</p>
+                                            </div>
+                                            <div class="message-body">
+                                                This short link is already in the database!
+                                            </div>
+                                        </article>
+                                    }
                                     <div class="field">
                                         <label class="label">Short link</label>
                                         <div class="control">
-                                            @Html.TextBoxFor(M => M.shortLink, new { @class = "input", required = "required", @placeholder = "student.ms/" })
+                                            @Html.TextBoxFor(M => M.shortLink, new { @class = "input", required = "required", @placeholder = "stdnt.ms/", @id = "shortLink"})
                                         </div>
                                     </div>
 
                                     <div class="field">
                                         <label class="label">Long link</label>
                                         <div class="control">
-                                            @Html.TextBoxFor(M => M.longLink, new { @class = "input", required = "required", @placeholder = "https://..." })
+                                            @Html.TextBoxFor(M => M.longLink, new { @class = "input", required = "required", @placeholder = "https://...", @id = "longLink" })
                                         </div>
                                     </div>
                                     <div class="field is-grouped">
@@ -87,17 +98,6 @@
                                             <button class="button is-link">Submit</button>
                                         </div>
                                     </div>
-                                }
-                                @if (ViewBag.Duple == true)
-                                {
-                                    <article class="message is-info field">
-                                        <div class="message-header">
-                                            <p>Error</p>
-                                        </div>
-                                        <div class="message-body">
-                                            The short link is already in the database!
-                                        </div>
-                                    </article>
                                 }
                             </div>
                         </div>

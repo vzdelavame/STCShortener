@@ -1,5 +1,6 @@
 @page
 @model _2inch.Models.Link
+@using _2inch.Utils;
 @{
 
 	if(!User.Identity.IsAuthenticated) {
@@ -65,6 +66,67 @@
                 <div class="container">
                     <div class="columns">
                         <div class="column">
+                            @if (ViewBag.EditSelectedLink != null) {
+                                <div class="is-half">
+                                    @using (Html.BeginForm("UpdateSelectedLink", "Admin", FormMethod.Post))
+                                    {
+                                        <article class="message is-info field">
+                                            <div class="message-header">
+                                                <p>Selected link</p>
+                                            </div>
+                                            <div class="message-body">
+                                                You have selected link with id @ViewBag.EditSelectedLink.id
+                                            </div>
+                                        </article>
+                                        
+                                        <div class="field">
+                                            <label class="label">Short link</label>
+                                            <div class="control">
+                                                @Html.TextBoxFor(M => M.shortLink, new { @class = "input", required = "required", @placeholder = "stdnt.ms/", @Value = ViewBag.EditSelectedLink.shortLink})
+                                            </div>
+                                        </div>
+
+                                        <div class="field">
+                                            <label class="label">Long link</label>
+                                            <div class="control">
+                                                @Html.TextBoxFor(M => M.longLink, new { @class = "input", required = "required", @placeholder = "https://...", @Value = ViewBag.EditSelectedLink.longLink})
+                                            </div>
+                                        </div>
+
+                                        <div class="field is-grouped">
+                                            <div class="control">
+                                                <button class="button is-link">Edit</button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            @if (ViewBag.Edited != null) {
+                                <article class="message is-success field">
+                                    <div class="message-header">
+                                        <p>Edited link</p>
+                                    </div>
+                                    <div class="message-body">
+                                        You have succesfuly edited link with id @ViewBag.Edited
+                                    </div>
+                                </article>
+                                {
+                                    ViewBag.Edited = null;
+                                }
+                            }
+                            @if (ViewBag.LinkDeleted != null) {
+                                <article class="message is-danger field">
+                                    <div class="message-header">
+                                        <p>Deleted link</p>
+                                    </div>
+                                    <div class="message-body">
+                                        You have succesfuly deleted link with id @ViewBag.LinkDeleted
+                                    </div>
+                                </article>
+                                {
+                                    ViewBag.LinkDeleted = null;
+                                }
+                            }
                             <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
                                 <thead>
                                     <tr>
@@ -79,7 +141,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (_2inch.Models.Link link in ViewBag.Links)
+                                    @foreach (_2inch.Models.Link link in LocalDatabase.Links)
                                     {
                                         <tr>
                                             <th>@link.id</th>
@@ -88,10 +150,21 @@
                                             <td>@link.createdBy</td>
                                             <td>@link.creationTime</td>
                                             <td>@link.clicked</td>
-                                            <td><i class="fas fa-edit"></i></td>
-                                            <td><i class="fas fa-trash-alt"></i></td>
+                                            <td>
+                                                <a href="@Url.ActionLink("EditSelectedLink", "Admin", new { id = link.id }) " class="button is-info is-outlined">
+                                                    <span class="icon is-small">
+                                                        <i class="fas fa-edit"></i>
+                                                    </span>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="@Url.ActionLink("DeleteSelectedLink", "Admin", new { id = link.id }) " class="button is-danger is-outlined">
+                                                    <span class="icon is-small">
+                                                        <i class="fas fa-times"></i>
+                                                    </span>
+                                                </a>
+                                            </td>
                                         </tr>
-
                                     }
                                 </tbody>
                             </table>
