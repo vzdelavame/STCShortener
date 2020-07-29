@@ -88,6 +88,17 @@
                                         </div>
                                     </div>
                                 }
+                                @if (ViewBag.Duple == true)
+                                {
+                                    <article class="message is-info field">
+                                        <div class="message-header">
+                                            <p>Error</p>
+                                        </div>
+                                        <div class="message-body">
+                                            The short link is already in the database!
+                                        </div>
+                                    </article>
+                                }
                             </div>
                         </div>
                     </div>

@@ -4,13 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
+using _2inch.Controllers;
 
 namespace _2inch.Utils
 {
     public class Database
     {
-        private static readonly string SQL_CONNECTION_STRING = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_Connection_String");
-        
+        //private static readonly string SQL_CONNECTION_STRING = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_Connection_String");
+        private static readonly string SQL_CONNECTION_STRING = "Server=tcp:shortener-db-server.database.windows.net,1433;Initial Catalog=shortener-db;Persist Security Info=False;User ID=LetnaSkola;Password=10Inches;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+
+
         public async static Task<string> GetLongString(string shortLink)
         {
             
@@ -76,6 +79,28 @@ namespace _2inch.Utils
                     await insert.ExecuteNonQueryAsync();
                     await conn.CloseAsync();
                 }
+            }
+        }
+
+        public async static Task<bool> CheckDuples(string short_Link) //funkcia na zistenie duplikacie short url v databaze
+        {
+            using (SqlConnection connection = new SqlConnection(SQL_CONNECTION_STRING))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(null, connection))
+                {
+                    command.CommandText = "SELECT shortLink FROM links WHERE shortLink = @link";
+                    command.Parameters.AddWithValue("@link", short_Link);
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            //string short_Link = reader.GetString(0);
+                            return short_Link == reader.GetString(0);
+                        }
+                    }
+                }
+                return false;
             }
         }
 
