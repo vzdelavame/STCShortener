@@ -11,12 +11,11 @@ namespace _2inch.Utils
     public class Database
     {
 
-        //private static readonly string SQL_CONNECTION_STRING = ConfigurationManager.ConnectionStrings["Connection_String"].ConnectionString;
+        private static readonly string SQL_CONNECTION_STRING = "";
         //Malo by to ťahať z Web App Settings!1!!1!!
         
         public async static Task<string> GetLongString(string shortLink)
         {
-            string SQL_CONNECTION_STRING = ConfigurationManager.ConnectionStrings["Connection_String"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(SQL_CONNECTION_STRING)) 
             {
                 connection.Open();
@@ -39,8 +38,6 @@ namespace _2inch.Utils
 
         public async static Task<bool> VerifyAdminCredentials(Models.Auth login) //funkcia na porovanie hesla v databaze a zadaneho hesla
         {
-            string SQL_CONNECTION_STRING = ConfigurationManager.ConnectionStrings["Connection_String"].ConnectionString;
-            bool response = false;
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
                 string queryString = $"SELECT * FROM userAccounts WHERE userEmail = @user AND userPassword = HASHBYTES('SHA2_512', @password)";
@@ -51,20 +48,18 @@ namespace _2inch.Utils
                     await conn.OpenAsync();
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (await reader.ReadAsync())
+                        if (await reader.ReadAsync())
                         {
-                            response = reader.GetString(1) == login.Pass;
-                            break;
+                            await conn.CloseAsync();
+                            return true;
                         }
-                        await conn.CloseAsync();
                     }
                 }
-                return response;
+                return false;
             }
         }
         public async static Task InsertLink(Models.Link link)
         {
-            string SQL_CONNECTION_STRING = ConfigurationManager.ConnectionStrings["Connection_String"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
                 //Toto by malo vložiť long_link a short_link, tieto názvy stĺpcov som používal podľa predošlích funkcii.
