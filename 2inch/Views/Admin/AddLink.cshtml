@@ -1,5 +1,14 @@
 ﻿@page
 @model _2inch.Models.Link
+@{
+
+	if(!User.Identity.IsAuthenticated) {
+		Redirect("/admin/login");
+		return;
+	}
+
+
+}
 <!DOCTYPE html>
 <html class="has-navbar-fixed-top">
 <head>
