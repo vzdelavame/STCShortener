@@ -12,7 +12,7 @@ namespace _2inch.Utils
     {
 
         private const string sqlConnString = "Connection_String";
-        private static readonly string SQL_CONNECTION_STRING = ConfigurationManager.ConnectionStrings[sqlConnString].ConnectionString;
+        private static readonly string SQL_CONNECTION_STRING = "";
 
         public async static Task<string> GetLongString(string shortLink)
         {
@@ -41,7 +41,7 @@ namespace _2inch.Utils
         {
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
-                string queryString = $"SELECT * FROM userAccounts WHERE userEmail = @user AND userPassword = HASHBYTES('SHA2_512', @password)";
+                string queryString = $"SELECT * FROM userAccounts WHERE userEmail = @user AND userPassword = @password";
                 using (SqlCommand command = new SqlCommand(queryString, conn))
                 {
                     command.Parameters.AddWithValue("@user", login.Name);
