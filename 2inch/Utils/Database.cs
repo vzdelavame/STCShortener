@@ -4,13 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
+using System.Configuration;
 
 namespace _2inch.Utils
 {
     public class Database
     {
 
-        private static string SQL_CONNECTION_STRING = Environment.GetEnvironmentVariable("Connection_String");
+        private static readonly string SQL_CONNECTION_STRING = ConfigurationManager.ConnectionStrings["Connection_String"].ConnectionString;
+        //Malo by to ťahať z Web App Settings!1!!1!!
         
         public async static Task<string> GetLongString(string shortLink)
         {
