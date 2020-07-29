@@ -12,12 +12,11 @@ namespace _2inch.Utils
     {
 
         //private static readonly string SQL_CONNECTION_STRING = ConfigurationManager.ConnectionStrings["Connection_String"].ConnectionString;
-        private static readonly string SQL_CONNECTION_STRING = Environment.GetEnvironmentVariable("Connection_String");
         //Malo by to ťahať z Web App Settings!1!!1!!
         
         public async static Task<string> GetLongString(string shortLink)
         {
-            Console.WriteLine(SQL_CONNECTION_STRING);
+            string SQL_CONNECTION_STRING = ConfigurationManager.ConnectionStrings["Connection_String"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(SQL_CONNECTION_STRING)) 
             {
                 connection.Open();
@@ -40,6 +39,7 @@ namespace _2inch.Utils
 
         public async static Task<bool> VerifyAdminCredentials(Models.Auth login) //funkcia na porovanie hesla v databaze a zadaneho hesla
         {
+            string SQL_CONNECTION_STRING = ConfigurationManager.ConnectionStrings["Connection_String"].ConnectionString;
             bool response = false;
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
@@ -63,6 +63,7 @@ namespace _2inch.Utils
         }
         public async static Task InsertLink(Models.Link link)
         {
+            string SQL_CONNECTION_STRING = ConfigurationManager.ConnectionStrings["Connection_String"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
                 //Toto by malo vložiť long_link a short_link, tieto názvy stĺpcov som používal podľa predošlích funkcii.
