@@ -80,7 +80,7 @@ namespace _2inch.Utils
             }
         }
 
-        public async static Task GetAllLinks()
+        public async static Task<List<Models.Link>> GetAllLinks()
         {
             List<Models.Link> LinkList = new List<Models.Link>();
 
@@ -92,7 +92,29 @@ namespace _2inch.Utils
 
                 using (SqlCommand getAll = new SqlCommand(queryString, conn))
                 {
+                    
+                    using (SqlDataAdapter Adapter = new SqlDataAdapter(getAll))
+                    {
+                        DataTable table = new DataTable();
+
+                        Adapter.Fill(table);
+
+                        foreach (DataRow row in table.Rows)
+                        {
+                            int id = int.Parse((string)row["id"]);
+                            string createdBy = row["createdBy"].ToString();
+                            string longLink = row["longLink"].ToString();
+                            string shortLink = row["shortLink"].ToString();
+                            int click = int.Parse((string)row["click"]);
+                            string creationTime = row["creationTime"].ToString();
+
+                            Models.Link linkObj = new Models.Link(id, createdBy, longLink, shortLink, click, creationTime);
+
+                            LinkList.Add(linkObj);
+                        }
+                    }
                 }
+                return LinkList;
             }
         }
     }
