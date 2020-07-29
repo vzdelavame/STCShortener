@@ -42,7 +42,8 @@ namespace _2inch.Utils
 
                 using (SqlCommand changeClick = new SqlCommand(queryString, connection)) //Potentially Nuclear Material, Handle With Care
                 {
-                    changeClick.Parameters.AddWithValue("@clicked", clicked++);
+                    int clickedincr = clicked++;
+                    changeClick.Parameters.AddWithValue("@clicked", clickedincr);
                     changeClick.Parameters.AddWithValue("@id", id);
 
                     await changeClick.ExecuteNonQueryAsync();
