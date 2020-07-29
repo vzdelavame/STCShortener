@@ -18,21 +18,38 @@ namespace _2inch.Utils
             using (SqlConnection connection = new SqlConnection(SQL_CONNECTION_STRING)) 
             {
                 connection.Open();
+                int clicked = -1;
+                int id = -1;
+                string longLink = null;
                 using (SqlCommand command = new SqlCommand(null, connection))
                 {
-                    command.CommandText = "SELECT * FROM links WHERE shortLink = @link";// UPDATE links SET clicked = @clicked WHERE shortlink = @link";
+                    command.CommandText = "SELECT * FROM links WHERE shortLink = @link";
                     command.Parameters.AddWithValue("@link", shortLink);
-                    //command.Parameters.AddWithValue("@clicked", clicked+1); Should Update
+                    
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
                         if(await reader.ReadAsync()) 
                         {
-                            string longLink = reader.GetString(1);
-                            return longLink;
+                            longLink = reader.GetString(3);
+
+                            clicked = reader.GetInt32(4);
+                            id = reader.GetInt32(0);
                         }
                     }
                 }
-                return null;
+
+                string queryString = "UPDATE links SET clicked = @clicked WHERE id = @id";
+
+                using (SqlCommand changeClick = new SqlCommand(queryString, connection)) //Potentially Nuclear Material, Handle With Care
+                {
+                    int clickedincr = clicked++;
+                    changeClick.Parameters.AddWithValue("@clicked", clickedincr);
+                    changeClick.Parameters.AddWithValue("@id", id);
+
+                    await changeClick.ExecuteNonQueryAsync();
+                }
+
+                return longLink;
             }
         }
 
