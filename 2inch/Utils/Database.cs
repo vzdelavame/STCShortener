@@ -16,6 +16,7 @@ namespace _2inch.Utils
         
         public async static Task<string> GetLongString(string shortLink)
         {
+            Console.WriteLine(SQL_CONNECTION_STRING);
             using (SqlConnection connection = new SqlConnection(SQL_CONNECTION_STRING)) 
             {
                 connection.Open();
