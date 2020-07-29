@@ -86,16 +86,12 @@ namespace _2inch.Utils
 
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
-                string queryString = "SELECT FROM links (id, createdBy, shortLink, longLink, clicked, creationTime)";
-                queryString += " VALUES(@id, @createdBy, @shortLink, @longLink, @clicked, @creationTime)";
+                string queryString = "SELECT * FROM links";
 
                 await conn.OpenAsync();
 
                 using (SqlCommand getAll = new SqlCommand(queryString, conn))
                 {
-                    getAll.Parameters.AddWithValue("@id", SqlDbType.Int);
-                    getAll.Parameters.AddWithValue("@createdBy", SqlDbType.Text);
-                    getAll.Parameters.AddWithValue("@shortLink", SqlDbType.Text);
                 }
             }
         }
