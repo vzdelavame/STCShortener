@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.IO;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
+using System.Configuration;
 
 namespace _2inch.Utils
 {
     public class Database
     {
 
-        private static string SQL_CONNECTION_STRING = "con string";
-        //private static string SQL_CONNECTION_STRING = Environment.GetEnvironmentVariable("sql_con");
+        private static readonly string SQL_CONNECTION_STRING = ConfigurationManager.ConnectionStrings["Connection_String"].ConnectionString;
+        //Malo by to ťahať z Web App Settings!1!!1!!
+        
         public async static Task<string> GetLongString(string shortLink)
         {
+            Console.WriteLine(SQL_CONNECTION_STRING);
             using (SqlConnection connection = new SqlConnection(SQL_CONNECTION_STRING)) 
             {
                 connection.Open();
