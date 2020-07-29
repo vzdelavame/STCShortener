@@ -10,7 +10,7 @@ namespace _2inch.Utils
     public class Database
     {
 
-        private static string SQL_CONNECTION_STRING = "Server=tcp:zaverecnyprojekt.database.windows.net,1433;Initial Catalog = shortenerletnaskola; Persist Security Info=False;User ID = andrejmokris; Password=ZaverecnapracaSTC2019;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout = 30;";
+        private static string SQL_CONNECTION_STRING = Environment.GetEnvironmentVariable("Connection_String");
         
         public async static Task<string> GetLongString(string shortLink)
         {
