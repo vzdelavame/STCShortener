@@ -14,12 +14,6 @@ namespace _2inch.Controllers
     public class AdminController : Controller
     {
 
-        public IActionResult AdminPanel()
-        {
-            if(!User.Identity.IsAuthenticated) return View("Login");
-            return View("AdminPanel");
-        }
-
         public IActionResult Login()
         {
             return View("Login");
@@ -31,12 +25,12 @@ namespace _2inch.Controllers
             return View("AddLink");
         }
 
-        public async Task<IActionResult> EditLinks()
+        public async Task<IActionResult> AdminPanel()
         {
             if(!User.Identity.IsAuthenticated) return View("Login");
             await reloadLinks();
 
-            return View("EditLinks");
+            return View("AdminPanel");
         }
 
         public async Task<IActionResult> Logout()
@@ -74,6 +68,8 @@ namespace _2inch.Controllers
         [HttpPost]
         public async Task<IActionResult> AddLinks(Models.Link newlink)
         {
+            if(!User.Identity.IsAuthenticated) return View("Login");
+
             if(newlink.shortLink == null || newlink.longLink == null || newlink.shortLink.Count() <= 0 || newlink.longLink.Count() <= 0)
                 return View("AddLink");
 
@@ -90,21 +86,24 @@ namespace _2inch.Controllers
         }
 
         public async Task<IActionResult> EditSelectedLink(int id) {
+            if(!User.Identity.IsAuthenticated) return View("Login");
+
             Models.Link link = await Database.GetLinkById(id);
 
             LocalDatabase.EditSelectedLink = link;
-            return View("EditLinks");
+            return View("AdminPanel");
         }
 
         public async Task<IActionResult> DeleteSelectedLink(int id) {
-            
+            if(!User.Identity.IsAuthenticated) return View("Login");
+
             string user = User.Identity.Name;
             if (await Database.DeleteLink(id, user))
             {
                 await reloadLinks();
                 ViewBag.LinkDeleted = id;
             }
-            return View("EditLinks");
+            return View("AdminPanel");
         }
 
         public async Task<List<Models.Link>> reloadLinks() {
@@ -116,7 +115,8 @@ namespace _2inch.Controllers
         [HttpGet]
         public async Task<IActionResult> UpdateSelectedLink(string shortLink, string longLink)
         {
-            Console.WriteLine(shortLink + " " + longLink);
+            if(!User.Identity.IsAuthenticated) return View("Login");
+
             Link link = LocalDatabase.EditSelectedLink;
 
             link.shortLink = shortLink;
@@ -125,7 +125,7 @@ namespace _2inch.Controllers
             LocalDatabase.EditSelectedLink = null;
 
             if(link.shortLink == null || link.longLink == null || link.shortLink.Count() <= 0 || link.longLink.Count() <= 0) {
-                return View("EditLinks");
+                return View("AdminPanel");
             }
 
             string user = User.Identity.Name;
@@ -138,7 +138,7 @@ namespace _2inch.Controllers
             ViewBag.Edited = link;
 
             await reloadLinks();
-            return View("EditLinks");
+            return View("AdminPanel");
         }
 
     }
