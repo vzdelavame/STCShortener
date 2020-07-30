@@ -74,6 +74,21 @@
                                         </div>
                                     </article>
 
+                                    @if (ViewBag.OwnerNotExist != null)
+                                    {
+                                        <article class="message is-danger field">
+                                            <div class="message-header">
+                                                <p>Owner transfer</p>
+                                            </div>
+                                            <div class="message-body">
+                                                New owner that you have provided does not exist!
+                                            </div>
+                                        </article>
+                                        {
+                                            ViewBag.OwnerNotExist = null;
+                                        }
+                                    }
+
                                     <div class="field">
                                         <label class="label">Short link</label>
                                         <div class="control">
@@ -85,6 +100,13 @@
                                         <label class="label">Long link</label>
                                         <div class="control">
                                             <input class="input" type="text" name="longLinkEdit" placeholder="https://..." id="longLinkEdit" value="@currentEditLink.longLink" runat="server" />
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label class="label">Link owner</label>
+                                        <div class="control">
+                                            <input class="input" type="text" name="ownerEdit" placeholder="..." id="ownerEdit" value="@currentEditLink.createdBy" runat="server" />
                                         </div>
                                     </div>
 
@@ -210,16 +232,6 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="~/js/index.js"></script>
-    <script type='text/javascript'>
-        function GetConfirmation() {
-            if (confirm("Are you sure you want to delete the link?")) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-    </script>
 
 </body>
 </html>

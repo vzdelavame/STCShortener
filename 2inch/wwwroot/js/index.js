@@ -14,7 +14,17 @@ $(document).ready(function() {
         var id = $("#idEdit").val();
         var shortLink = $("#shortLinkEdit").val();
         var longLink = $("#longLinkEdit").val();
+        var owner = $("#ownerEdit").val();
 
-        window.location = "/Admin/UpdateSelectedLink?id=" + id +"&shortLink=" + shortLink + "&longLink=" + longLink;
+        window.location = "/Admin/UpdateSelectedLink?id=" + id +"&shortLink=" + shortLink + "&longLink=" + longLink + "&owner=" + owner;
     });
 });
+
+function GetConfirmation() {
+    if (confirm("Are you sure you want to delete the link?")) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}

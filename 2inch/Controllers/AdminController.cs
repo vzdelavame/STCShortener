@@ -121,14 +121,14 @@ namespace _2inch.Controllers
 
         public async Task<List<Models.Link>> reloadLinks() {
             List<Models.Link> LinkList = await Database.GetAllLinks(User.Identity.Name);
-            
+
             LocalDatabase.Links.Remove(User.Identity.Name);
             LocalDatabase.Links.Add(User.Identity.Name, LinkList);
             return LinkList;
         }
 
         [HttpGet]
-        public async Task<IActionResult> UpdateSelectedLink(int id, string shortLink, string longLink)
+        public async Task<IActionResult> UpdateSelectedLink(int id, string shortLink, string longLink, string owner)
         {
             if(!User.Identity.IsAuthenticated) return View("Login");
 
@@ -142,16 +142,22 @@ namespace _2inch.Controllers
             link.shortLink = shortLink;
             link.longLink = longLink;
 
-            LocalDatabase.EditSelectedLink.Remove(User.Identity.Name);
-
             if(link.shortLink == null || link.longLink == null || link.shortLink.Count() <= 0 || link.longLink.Count() <= 0) {
                 ViewBag.CanNotedit = true;
                 return View("AdminPanel");
             }
 
+            if(link.createdBy != owner) {
+                if(!await Database.CheckOwner(owner)) {
+                    ViewBag.OwnerNotExist = true;
+                    return View("AdminPanel");
+                }
+            }
+
+            LocalDatabase.EditSelectedLink.Remove(User.Identity.Name);
             string user = User.Identity.Name;
 
-            if (await Database.EditLink(link, user))
+            if (await Database.EditLink(link, user, owner))
             {
                 if (ModelState.IsValid)
                     ModelState.Clear();
