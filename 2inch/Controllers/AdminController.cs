@@ -130,14 +130,15 @@ namespace _2inch.Controllers
 
             string user = User.Identity.Name;
 
-            await Database.EditLink(link, user);
+            if (await Database.EditLink(link, user))
+            {
+                if (ModelState.IsValid)
+                    ModelState.Clear();
 
-            if(ModelState.IsValid)
-                ModelState.Clear();
+                ViewBag.Edited = link;
 
-            ViewBag.Edited = link;
-
-            await reloadLinks();
+                await reloadLinks();
+            }
             return View("AdminPanel");
         }
 

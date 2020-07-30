@@ -233,10 +233,12 @@ namespace _2inch.Utils
             }
         }
 
-        public async static Task EditLink(Models.Link link, string User)
+        public async static Task<bool> EditLink(Models.Link link, string User)
         {
+            bool check = false;
             if (User == link.createdBy)
             {
+                check = true;
                 using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
                 { //Možno by bolo dobré implementovať kontrolu toho či sa LoggedInUser = createdBy a ak nie, tak nepovoliť edit?
                     string queryString = "UPDATE links";
@@ -254,6 +256,7 @@ namespace _2inch.Utils
                     }
                 }
             }
+            return check;
         }
     }
 }
