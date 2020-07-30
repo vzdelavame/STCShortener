@@ -11,7 +11,7 @@ namespace _2inch.Utils
     public class Database
     {
         private static readonly string SQL_CONNECTION_STRING = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_Connection_String");
-
+        
         public async static Task<string> GetLongString(string shortLink)
         {
             
@@ -70,7 +70,7 @@ namespace _2inch.Utils
                         Adapter.Fill(table);
 
                         foreach (DataRow row in table.Rows)
-                        { 
+                        { //Vyberame data z Table, vytvarame Objekty a populujeme ich informaciami
                             string createdBy = row["createdBy"].ToString();
                             string longLink = row["longLink"].ToString();
                             string shortLink = row["shortLink"].ToString();
@@ -180,11 +180,9 @@ namespace _2inch.Utils
                             string longLink = row["longLink"].ToString();
                             string shortLink = row["shortLink"].ToString();
                             int click = int.Parse(row["clicked"].ToString());
+                            string[] creationTime = row["creationTime"].ToString().Split(" ");
 
-                            DateTime creationDT = DateTime.Parse(row["creationTime"].ToString());
-                            string dateTime = "";   //TODO:Toto vyeditujte tak, v akom formate to chcete ukazovať (creationDT.Day + "/"... alebo nieco take)
-
-                            Models.Link linkObj = new Models.Link(id, createdBy, longLink, shortLink, click, dateTime);
+                            Models.Link linkObj = new Models.Link(id, createdBy, longLink, shortLink, click, creationTime[0]);
 
                             LinkList.Add(linkObj); //Pridavame do Listu
                         }
@@ -194,39 +192,66 @@ namespace _2inch.Utils
             }
         }
 
-        public async static Task DeleteLink(int id)
+        public async static Task<bool> DeleteLink(int id, string User)
         {
+            string createdBy = null;
+            bool response = false;
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
-                string queryString = "DELETE FROM links WHERE id = @id";
+                string extractString = "SELECT createdBy FROM links WHERE id = @id";
 
                 await conn.OpenAsync();
 
-                using (SqlCommand delete = new SqlCommand(queryString, conn))
+                using (SqlCommand find = new SqlCommand(extractString, conn))
                 {
-                    delete.Parameters.AddWithValue("@id", id);
+                    find.Parameters.AddWithValue("@id", id);
 
-                    await delete.ExecuteNonQueryAsync();
+                    using (SqlDataReader reader = await find.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            createdBy = reader.GetString(0);
+                        }
+                    }
                 }
+
+                if (User == createdBy)
+                {
+
+                    string queryString = "DELETE FROM links WHERE id = @id";
+
+                    using (SqlCommand delete = new SqlCommand(queryString, conn))
+                    {
+                        delete.Parameters.AddWithValue("@id", id);
+
+                        await delete.ExecuteNonQueryAsync();
+
+                        response = true;
+                    }
+                }
+                return response;
             }
         }
 
-        public async static Task EditLink(Models.Link link)
+        public async static Task EditLink(Models.Link link, string User)
         {
-            using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
-            { //Možno by bolo dobré implementovať kontrolu toho či sa LoggedInUser = createdBy a ak nie, tak nepovoliť edit?
-                string queryString = "UPDATE links";
-                queryString += " SET shortLink = @short, longLink = @long Where id = @id";
+            if (User == link.createdBy)
+            {
+                using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
+                { //Možno by bolo dobré implementovať kontrolu toho či sa LoggedInUser = createdBy a ak nie, tak nepovoliť edit?
+                    string queryString = "UPDATE links";
+                    queryString += " SET shortLink = @short, longLink = @long Where id = @id";
 
-                await conn.OpenAsync();
+                    await conn.OpenAsync();
 
-                using (SqlCommand edit = new SqlCommand(queryString, conn))
-                {
-                    edit.Parameters.AddWithValue("@short", link.shortLink);
-                    edit.Parameters.AddWithValue("@long", link.longLink);
-                    edit.Parameters.AddWithValue("@id", link.id);
+                    using (SqlCommand edit = new SqlCommand(queryString, conn))
+                    {
+                        edit.Parameters.AddWithValue("@short", link.shortLink);
+                        edit.Parameters.AddWithValue("@long", link.longLink);
+                        edit.Parameters.AddWithValue("@id", link.id);
 
-                    await edit.ExecuteNonQueryAsync();
+                        await edit.ExecuteNonQueryAsync();
+                    }
                 }
             }
         }
