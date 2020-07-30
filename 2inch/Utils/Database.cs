@@ -10,7 +10,7 @@ namespace _2inch.Utils
 {
     public class Database
     {
-        private static readonly string SQL_CONNECTION_STRING = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_Connection_String");
+        private static readonly string SQL_CONNECTION_STRING = "Server=tcp:shortener-db-server.database.windows.net,1433;Initial Catalog=shortener-db;Persist Security Info=False;User ID=LetnaSkola;Password=10Inches;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";//Environment.GetEnvironmentVariable("CUSTOMCONNSTR_Connection_String");
 
         public async static Task<string> GetLongString(string shortLink)
         {
@@ -182,8 +182,7 @@ namespace _2inch.Utils
                             int click = int.Parse(row["clicked"].ToString());
 
                             DateTime creationDT = DateTime.Parse(row["creationTime"].ToString());
-                            string dateTime = "";   //TODO:Toto vyeditujte tak, v akom formate to chcete ukazovať (creationDT.Day + "/"... alebo nieco take)
-
+                            string dateTime = creationDT.ToString(creationDT.Day + "." + creationDT.Month + "." + creationDT.Year);
                             Models.Link linkObj = new Models.Link(id, createdBy, longLink, shortLink, click, dateTime);
 
                             LinkList.Add(linkObj); //Pridavame do Listu
