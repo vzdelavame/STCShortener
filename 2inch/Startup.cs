@@ -45,10 +45,10 @@ namespace _2inch
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("STC SHORTENER");
-                });
+                endpoints.MapControllerRoute(
+                    name: "MainIndex",
+                    pattern: "/",
+                    defaults: new { controller = "MainIndex", action = "Index" });
 
                 endpoints.MapControllerRoute(
                     name: "NotFoundRoute",
@@ -75,7 +75,7 @@ namespace _2inch
 #pragma warning disable CS1998
                 endpoints.MapGet("/admin", async context =>
                 {
-                    context.Response.Redirect("/admin/Login");
+                    context.Response.Redirect("/Admin/Login");
                 });             
 
                 endpoints.MapGet("/Admin/{name:alpha}", async context =>

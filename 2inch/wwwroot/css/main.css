@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400&display=swap');
+
+body {
+	text-align: center;
+	margin: 0px;
+	padding: 0px;
+}
+
+h1 {
+	margin: 15% 10% 15px 10%;
+	font-family: 'IBM Plex Mono', monospace;
+	font-size: 32px;
+}
+
+h2 {
+	font-family: 'IBM Plex Mono', monospace;
+	font-weight: 300;
+	border-top: 3px solid black;
+	margin: 0 15% 0 15%;
+	padding-top: 15px;
+	padding-bottom: 30px;
+	border-radius: 3px;
+	font-size: 18px;
+}
+
+h1:hover {
+	color: #565656;
+}
+
+p, .ap {
+	font-family: 'IBM Plex Mono', monospace;
+	font-weight: 300;
+	margin: 40px 5% 16px 5%;
+	line-height: 12px;
+	font-size: 13px;
+}
+
+footer {
+	font-size: 32px;
+	margin-top: 90px;
+}
+
+.error {
+	margin: 8px;
+	font-size: 18px;
+}
+
+.error-div {
+	margin-top: 32px;
+}
+
+.p-footer {
+	font-size: 16px;
+}
+
+.copy-footer {
+	font-family: 'IBM Plex Mono', monospace;
+	font-size: 12px;
+}
+
+.no-decoration {
+	text-decoration: none;
+	list-style: none;
+	margin: 16px;
+	padding: 0px;
+}
+
+.button {
+	color: black;
+	border: none;
+	text-decoration: none;
+	margin-right: 8px;
+	margin-left: 8px;
+}
+
+.button:hover {
+	color: #666666;
+}
+
+.decor-background-grey {
+	background-color: #cccccc;
+	padding: 5px;
+	border-radius: 5px;
+}
