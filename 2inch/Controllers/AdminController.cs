@@ -75,8 +75,8 @@ namespace _2inch.Controllers
 
             newlink.createdBy = User.Identity.Name;
             newlink.clicked = 0;
-            ViewBag.Duple = await Database.GetLinkByShortLink(newlink.shortLink) != null;
-            if (ViewBag.Duple == false)
+            ViewBag.Duple = await Database.GetLinkByShortLink(newlink.shortLink);
+            if (ViewBag.Duple == null)
             {
                 ViewBag.NewLink = newlink;
                 await Database.InsertLink(newlink);

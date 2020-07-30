@@ -60,7 +60,7 @@
                             <div class="column is-half">
                                 @using (Html.BeginForm("AddLinks", "Admin", FormMethod.Post))
                                 {
-                                    @if (ViewBag.Duple != null && ViewBag.Duple == true)
+                                    @if (ViewBag.Duple != null)
                                     {
                                         <article class="message is-danger field">
                                             <div class="message-header">
@@ -78,7 +78,7 @@
                                                 <p>Link added</p>
                                             </div>
                                             <div class="message-body">
-                                                You have successfuly added <strong>@ViewBag.NewLink.shortName</strong> link!
+                                                You have successfully added <strong>@ViewBag.NewLink.shortLink</strong> link!
                                             </div>
                                         </article>
                                         {
