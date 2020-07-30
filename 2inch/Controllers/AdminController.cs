@@ -75,13 +75,16 @@ namespace _2inch.Controllers
 
             newlink.createdBy = User.Identity.Name;
             newlink.clicked = 0;
-            ViewBag.Duple = await Database.CheckDuples(newlink.shortLink);
+            ViewBag.Duple = await Database.GetLinkByShortLink(newlink.shortLink) != null;
             if (ViewBag.Duple == false)
             {
+                ViewBag.NewLink = newlink;
                 await Database.InsertLink(newlink);
+
+                if(ModelState.IsValid)
+                    ModelState.Clear();
             }
-            if(ModelState.IsValid)
-                ModelState.Clear();
+
             return View("AddLink");
         }
 

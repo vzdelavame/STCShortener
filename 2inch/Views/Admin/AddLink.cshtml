@@ -60,27 +60,30 @@
                             <div class="column is-half">
                                 @using (Html.BeginForm("AddLinks", "Admin", FormMethod.Post))
                                 {
-                                    @if (ViewBag.Duple != null)
+                                    @if (ViewBag.Duple != null && ViewBag.Duple == true)
                                     {
                                         <article class="message is-danger field">
                                             <div class="message-header">
                                                 <p>Error</p>
                                             </div>
                                             <div class="message-body">
-                                                This short link is already in the database!
+                                                This short link is already owned by @ViewBag.Duple.createdBy
                                             </div>
                                         </article>
                                     }
-                                    @if (ViewBag.Duple == false)
+                                    @if (ViewBag.NewLink != null)
                                     {
                                         <article class="message is-success field">
                                             <div class="message-header">
                                                 <p>Link added</p>
                                             </div>
                                             <div class="message-body">
-                                                You have successfuly added link!
+                                                You have successfuly added <strong>@ViewBag.NewLink.shortName</strong> link!
                                             </div>
                                         </article>
+                                        {
+                                            ViewBag.NewLink = null;
+                                        }
                                     }
                                     <div class="field">
                                         <label class="label">Short link</label>

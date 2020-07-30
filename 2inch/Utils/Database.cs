@@ -221,28 +221,6 @@ namespace _2inch.Utils
             }
         }
 
-        public async static Task<bool> CheckDuples(string short_Link) //funkcia na zistenie duplikacie short url v databaze
-        {
-            using (SqlConnection connection = new SqlConnection(SQL_CONNECTION_STRING))
-            {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand(null, connection))
-                {
-                    command.CommandText = "SELECT shortLink FROM links WHERE shortLink = @link";
-                    command.Parameters.AddWithValue("@link", short_Link);
-                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
-                    {
-                        if (await reader.ReadAsync())
-                        {
-                            //string short_Link = reader.GetString(0);
-                            return short_Link == reader.GetString(0);
-                        }
-                    }
-                }
-                return false;
-            }
-        }
-
         public async static Task<List<Models.Link>> GetAllLinks(string createdBy)
         {
             List<Models.Link> LinkList = new List<Models.Link>(); //List na vsetky rows
