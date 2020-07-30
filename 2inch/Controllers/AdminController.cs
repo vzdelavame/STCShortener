@@ -106,6 +106,13 @@ namespace _2inch.Controllers
             return View("AdminPanel");
         }
 
+        public IActionResult DiscardEdit() {
+            if(!User.Identity.IsAuthenticated) return View("Login");
+
+            LocalDatabase.EditSelectedLink = null;
+            return View("AdminPanel");
+        }
+
         public async Task<List<Models.Link>> reloadLinks() {
             List<Models.Link> LinkList = await Database.GetAllLinks();
             LocalDatabase.Links = LinkList;

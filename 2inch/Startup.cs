@@ -51,6 +51,11 @@ namespace _2inch
                     defaults: new { controller = "NotFound", action = "Index" });
 
                 endpoints.MapControllerRoute(
+                    name: "Index",
+                    pattern: "/Index",
+                    defaults: new { controller = "MainIndex", action = "Index" });
+
+                endpoints.MapControllerRoute(
                     name: "Admin",
                     pattern: "{controller=Admin}/{action=Login}");
 
@@ -77,13 +82,12 @@ namespace _2inch
                 {
                     context.Response.Redirect("/admin/NotFoundPage");
                 });
+
+                endpoints.MapGet("/", async context =>
+                {
+                    context.Response.Redirect("/Index");
+                });
 #pragma warning restore CS1998
-
-                endpoints.MapControllerRoute(
-                    name: "MainIndex",
-                    pattern: "/",
-                    defaults: new { controller = "MainIndex", action = "Index" });
-
             });
         }
     }
