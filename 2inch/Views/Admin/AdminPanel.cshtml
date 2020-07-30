@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model _2inch.Models.Link
 @using _2inch.Utils;
 @using System.Security.Principal;
@@ -62,7 +62,8 @@
                 <div class="container">
                     <div class="columns">
                         <div class="column">
-                            @if (currentEditLink != null) {
+                            @if (currentEditLink != null)
+                            {
                                 <div class="is-half">
                                     <article class="message is-info field">
                                         <div class="message-header">
@@ -72,22 +73,22 @@
                                             You have selected link with id @currentEditLink.id and shortLink stdnt.ms/<strong>@currentEditLink.shortLink</strong>
                                         </div>
                                     </article>
-                                    
+
                                     <div class="field">
                                         <label class="label">Short link</label>
                                         <div class="control">
-                                            <input class="input" type="text" name="shortLinkEdit" placeholder="stdnt.ms/..." id="shortLinkEdit" value="@currentEditLink.shortLink" runat="server"/>
+                                            <input class="input" type="text" name="shortLinkEdit" placeholder="stdnt.ms/..." id="shortLinkEdit" value="@currentEditLink.shortLink" runat="server" />
                                         </div>
                                     </div>
 
                                     <div class="field">
                                         <label class="label">Long link</label>
                                         <div class="control">
-                                            <input class="input" type="text" name="longLinkEdit" placeholder="https://..." id="longLinkEdit" value="@currentEditLink.longLink" runat="server"/>
+                                            <input class="input" type="text" name="longLinkEdit" placeholder="https://..." id="longLinkEdit" value="@currentEditLink.longLink" runat="server" />
                                         </div>
                                     </div>
 
-                                    <input class="input" type="hidden" id="idEdit" value="@currentEditLink.id"/>
+                                    <input class="input" type="hidden" id="idEdit" value="@currentEditLink.id" />
 
                                     <div class="field is-grouped">
                                         <div class="control">
@@ -100,7 +101,8 @@
                                     </div>
                                 </div>
                             }
-                            @if (ViewBag.Edited != null) {
+                            @if (ViewBag.Edited != null)
+                            {
                                 <article class="message is-success field">
                                     <div class="message-header">
                                         <p>Edited link</p>
@@ -113,7 +115,8 @@
                                     ViewBag.Edited = null;
                                 }
                             }
-                            @if (ViewBag.LinkDeleted != null) {
+                            @if (ViewBag.LinkDeleted != null)
+                            {
                                 <article class="message is-danger field">
                                     <div class="message-header">
                                         <p>Deleted link</p>
@@ -126,7 +129,8 @@
                                     ViewBag.LinkDeleted = null;
                                 }
                             }
-                            @if (ViewBag.CanNotEdit != null) {
+                            @if (ViewBag.CanNotEdit != null)
+                            {
                                 <article class="message is-danger field">
                                     <div class="message-header">
                                         <p>Edit Link</p>
@@ -139,7 +143,8 @@
                                     ViewBag.CanNotEdit = null;
                                 }
                             }
-                            @if (ViewBag.DiscardEdit != null) {
+                            @if (ViewBag.DiscardEdit != null)
+                            {
                                 <article class="message is-info field">
                                     <div class="message-header">
                                         <p>Discard Edit</p>
@@ -166,7 +171,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if(links != null) {
+                                    @if (links != null)
+                                    {
                                         @foreach (_2inch.Models.Link link in links)
                                         {
                                             <tr>
@@ -184,7 +190,7 @@
                                                     </a>
                                                 </td>
                                                 <td>
-                                                    <a href="@Url.ActionLink("DeleteSelectedLink", "Admin", new { id = link.id }) " class="button is-danger is-outlined">
+                                                    <a href="@Url.ActionLink("DeleteSelectedLink", "Admin", new { id = link.id }) " onclick="return GetConfirmation();" class="button is-danger is-outlined">
                                                         <span class="icon is-small">
                                                             <i class="fas fa-times"></i>
                                                         </span>
@@ -204,5 +210,16 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="~/js/index.js"></script>
+    <script type='text/javascript'>
+        function GetConfirmation() {
+            if (confirm("Are you sure you want to delete the link?")) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    </script>
+
 </body>
 </html>
