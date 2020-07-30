@@ -105,6 +105,8 @@ namespace _2inch.Controllers
             {
                 await reloadLinks();
                 ViewBag.LinkDeleted = id;
+            }else {
+                ViewBag.CanNotEdit = true;
             }
             return View("AdminPanel");
         }
@@ -118,7 +120,8 @@ namespace _2inch.Controllers
         }
 
         public async Task<List<Models.Link>> reloadLinks() {
-            List<Models.Link> LinkList = await Database.GetAllLinks();
+            List<Models.Link> LinkList = await Database.GetAllLinks(User.Identity.Name);
+            
             LocalDatabase.Links.Remove(User.Identity.Name);
             LocalDatabase.Links.Add(User.Identity.Name, LinkList);
             return LinkList;

@@ -10,7 +10,7 @@ namespace _2inch.Utils
 {
     public class Database
     {
-        private static readonly string SQL_CONNECTION_STRING = "Server=tcp:shortener-db-server.database.windows.net,1433;Initial Catalog=shortener-db;Persist Security Info=False;User ID=LetnaSkola;Password=10Inches;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";//Environment.GetEnvironmentVariable("CUSTOMCONNSTR_Connection_String");
+        private static readonly string SQL_CONNECTION_STRING = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_Connection_String");
         
         public async static Task<string> GetLongString(string shortLink)
         {
@@ -154,18 +154,19 @@ namespace _2inch.Utils
             }
         }
 
-        public async static Task<List<Models.Link>> GetAllLinks()
+        public async static Task<List<Models.Link>> GetAllLinks(string userEmail)
         {
             List<Models.Link> LinkList = new List<Models.Link>(); //List na vsetky rows
 
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
-                string queryString = "SELECT * FROM links";
+                string queryString = "SELECT * FROM links WHERE userEmail = @userEmail";
 
                 await conn.OpenAsync();
 
                 using (SqlCommand getAll = new SqlCommand(queryString, conn))
                 {
+                    getAll.Parameters.AddWithValue("@userEmail", userEmail);
                     
                     using (SqlDataAdapter Adapter = new SqlDataAdapter(getAll))
                     {
