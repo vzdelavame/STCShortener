@@ -46,11 +46,6 @@ namespace _2inch
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "MainIndex",
-                    pattern: "/",
-                    defaults: new { controller = "MainIndex", action = "Index" });
-
-                endpoints.MapControllerRoute(
                     name: "NotFoundRoute",
                     pattern: "/404",
                     defaults: new { controller = "NotFound", action = "Index" });
@@ -83,6 +78,11 @@ namespace _2inch
                     context.Response.Redirect("/admin/NotFoundPage");
                 });
 #pragma warning restore CS1998
+
+                endpoints.MapControllerRoute(
+                    name: "MainIndex",
+                    pattern: "/",
+                    defaults: new { controller = "MainIndex", action = "Index" });
 
             });
         }
