@@ -1,12 +1,17 @@
 @page
 @model _2inch.Models.Link
 @using _2inch.Utils;
+@using System.Security.Principal;
+@using System.Collections.Generic;
 @{
 
 	if(!User.Identity.IsAuthenticated) {
 		Redirect("/admin/login");
 		return;
 	}
+
+    _2inch.Models.Link currentEditLink = _2inch.Utils.LocalDatabase.EditSelectedLink.ContainsKey(User.Identity.Name) ? _2inch.Utils.LocalDatabase.EditSelectedLink[User.Identity.Name] : null;
+    List<_2inch.Models.Link> links = _2inch.Utils.LocalDatabase.Links.ContainsKey(User.Identity.Name) ? _2inch.Utils.LocalDatabase.Links[User.Identity.Name] : null;
 }
 <!DOCTYPE html>
 <html class="has-navbar-fixed-top">
@@ -57,30 +62,32 @@
                 <div class="container">
                     <div class="columns">
                         <div class="column">
-                            @if (LocalDatabase.EditSelectedLink != null) {
+                            @if (currentEditLink != null) {
                                 <div class="is-half">
                                     <article class="message is-info field">
                                         <div class="message-header">
                                             <p>Selected link</p>
                                         </div>
                                         <div class="message-body">
-                                            You have selected link with id @LocalDatabase.EditSelectedLink.id and shortLink stdnt.ms/<strong>@LocalDatabase.EditSelectedLink.shortLink</strong>
+                                            You have selected link with id @currentEditLink.id and shortLink stdnt.ms/<strong>@currentEditLink.shortLink</strong>
                                         </div>
                                     </article>
                                     
                                     <div class="field">
                                         <label class="label">Short link</label>
                                         <div class="control">
-                                            <input class="input" type="text" name="shortLinkEdit" placeholder="stdnt.ms/..." title="Nickname" id="shortLinkEdit" value="@LocalDatabase.EditSelectedLink.shortLink" runat="server"/>
+                                            <input class="input" type="text" name="shortLinkEdit" placeholder="stdnt.ms/..." id="shortLinkEdit" value="@currentEditLink.shortLink" runat="server"/>
                                         </div>
                                     </div>
 
                                     <div class="field">
                                         <label class="label">Long link</label>
                                         <div class="control">
-                                            <input class="input" type="text" name="longLinkEdit" placeholder="https://..." title="Nickname" id="longLinkEdit" value="@LocalDatabase.EditSelectedLink.longLink" runat="server"/>
+                                            <input class="input" type="text" name="longLinkEdit" placeholder="https://..." id="longLinkEdit" value="@currentEditLink.longLink" runat="server"/>
                                         </div>
                                     </div>
+
+                                    <input class="input" type="hidden" id="idEdit" value="@currentEditLink.id"/>
 
                                     <div class="field is-grouped">
                                         <div class="control">
@@ -88,7 +95,7 @@
                                         </div>
 
                                         <div class="control">
-                                            <a href=" @Url.ActionLink("DiscardEdit", "Admin") " class="button is-link">Edit</a>
+                                            <a href=" @Url.ActionLink("DiscardEdit", "Admin") " class="button is-danger">Discard</a>
                                         </div>
                                     </div>
                                 </div>
@@ -119,6 +126,32 @@
                                     ViewBag.LinkDeleted = null;
                                 }
                             }
+                            @if (ViewBag.CanNotEdit != null) {
+                                <article class="message is-danger field">
+                                    <div class="message-header">
+                                        <p>Edit Link</p>
+                                    </div>
+                                    <div class="message-body">
+                                        An error occured while editing link! Maybe you don't have permission to edit this link?
+                                    </div>
+                                </article>
+                                {
+                                    ViewBag.CanNotEdit = null;
+                                }
+                            }
+                            @if (ViewBag.DiscardEdit != null) {
+                                <article class="message is-info field">
+                                    <div class="message-header">
+                                        <p>Discard Edit</p>
+                                    </div>
+                                    <div class="message-body">
+                                        You have discarded edit menu.
+                                    </div>
+                                </article>
+                                {
+                                    ViewBag.DiscardEdit = null;
+                                }
+                            }
                             <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth add-link">
                                 <thead>
                                     <tr>
@@ -133,30 +166,32 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (_2inch.Models.Link link in LocalDatabase.Links)
-                                    {
-                                        <tr>
-                                            <th>@link.id</th>
-                                            <td>@link.shortLink</td>
-                                            <td>@link.longLink</td>
-                                            <td>@link.createdBy</td>
-                                            <td>@link.creationTime</td>
-                                            <td>@link.clicked</td>
-                                            <td>
-                                                <a href="@Url.ActionLink("EditSelectedLink", "Admin", new { id = link.id }) " class="button is-info is-outlined">
-                                                    <span class="icon is-small">
-                                                        <i class="fas fa-edit"></i>
-                                                    </span>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a href="@Url.ActionLink("DeleteSelectedLink", "Admin", new { id = link.id }) " class="button is-danger is-outlined">
-                                                    <span class="icon is-small">
-                                                        <i class="fas fa-times"></i>
-                                                    </span>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                    @if(links != null) {
+                                        @foreach (_2inch.Models.Link link in links)
+                                        {
+                                            <tr>
+                                                <th>@link.id</th>
+                                                <td>@link.shortLink</td>
+                                                <td>@link.longLink</td>
+                                                <td>@link.createdBy</td>
+                                                <td>@link.creationTime</td>
+                                                <td>@link.clicked</td>
+                                                <td>
+                                                    <a href="@Url.ActionLink("EditSelectedLink", "Admin", new { id = link.id }) " class="button is-info is-outlined">
+                                                        <span class="icon is-small">
+                                                            <i class="fas fa-edit"></i>
+                                                        </span>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="@Url.ActionLink("DeleteSelectedLink", "Admin", new { id = link.id }) " class="button is-danger is-outlined">
+                                                        <span class="icon is-small">
+                                                            <i class="fas fa-times"></i>
+                                                        </span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
                                     }
                                 </tbody>
                             </table>

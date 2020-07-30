@@ -90,7 +90,10 @@ namespace _2inch.Controllers
 
             Models.Link link = await Database.GetLinkById(id);
 
-            LocalDatabase.EditSelectedLink = link;
+            if(!LocalDatabase.EditSelectedLink.ContainsKey(User.Identity.Name))
+                LocalDatabase.EditSelectedLink.Add(User.Identity.Name, link);
+            else
+                LocalDatabase.EditSelectedLink[User.Identity.Name] = link;
             return View("AdminPanel");
         }
 
@@ -109,29 +112,37 @@ namespace _2inch.Controllers
         public IActionResult DiscardEdit() {
             if(!User.Identity.IsAuthenticated) return View("Login");
 
-            LocalDatabase.EditSelectedLink = null;
+            LocalDatabase.EditSelectedLink.Remove(User.Identity.Name);
+            ViewBag.DiscardEdit = true;
             return View("AdminPanel");
         }
 
         public async Task<List<Models.Link>> reloadLinks() {
             List<Models.Link> LinkList = await Database.GetAllLinks();
-            LocalDatabase.Links = LinkList;
+            LocalDatabase.Links.Remove(User.Identity.Name);
+            LocalDatabase.Links.Add(User.Identity.Name, LinkList);
             return LinkList;
         }
 
         [HttpGet]
-        public async Task<IActionResult> UpdateSelectedLink(string shortLink, string longLink)
+        public async Task<IActionResult> UpdateSelectedLink(int id, string shortLink, string longLink)
         {
             if(!User.Identity.IsAuthenticated) return View("Login");
 
-            Link link = LocalDatabase.EditSelectedLink;
+            Link link = LocalDatabase.EditSelectedLink.ContainsKey(User.Identity.Name) ? LocalDatabase.EditSelectedLink[User.Identity.Name] : null;
+
+            if(link == null || id != link.id) {
+                ViewBag.CanNotedit = true;
+                return View("AdminPanel");
+            }
 
             link.shortLink = shortLink;
             link.longLink = longLink;
 
-            LocalDatabase.EditSelectedLink = null;
+            LocalDatabase.EditSelectedLink.Remove(User.Identity.Name);
 
             if(link.shortLink == null || link.longLink == null || link.shortLink.Count() <= 0 || link.longLink.Count() <= 0) {
+                ViewBag.CanNotedit = true;
                 return View("AdminPanel");
             }
 
@@ -143,11 +154,12 @@ namespace _2inch.Controllers
                     ModelState.Clear();
 
                 ViewBag.Edited = link;
+            }else {
+                ViewBag.CanNotedit = true;
             }
             await reloadLinks();
        
             return View("AdminPanel");
         }
-
     }
 }

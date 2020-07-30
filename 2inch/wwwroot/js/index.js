@@ -11,9 +11,10 @@ $(document).ready(function() {
 
     $("#edit-link").click(function() {
   
+        var id = $("#idEdit").val();
         var shortLink = $("#shortLinkEdit").val();
         var longLink = $("#longLinkEdit").val();
 
-        window.location = "/Admin/UpdateSelectedLink?shortLink=" + shortLink + "&longLink=" + longLink;
+        window.location = "/Admin/UpdateSelectedLink?id=" + id +"&shortLink=" + shortLink + "&longLink=" + longLink;
     });
 });
