@@ -136,9 +136,9 @@ namespace _2inch.Controllers
                     ModelState.Clear();
 
                 ViewBag.Edited = link;
-
-                await reloadLinks();
             }
+            await reloadLinks();
+       
             return View("AdminPanel");
         }
 
