@@ -97,11 +97,13 @@ namespace _2inch.Controllers
         }
 
         public async Task<IActionResult> DeleteSelectedLink(int id) {
-            await Database.DeleteLink(id);
-
-            await reloadLinks();
-
-            ViewBag.LinkDeleted = id;
+            
+            string user = User.Identity.Name;
+            if (await Database.DeleteLink(id, user))
+            {
+                await reloadLinks();
+                ViewBag.LinkDeleted = id;
+            }
             return View("EditLinks");
         }
 
@@ -117,7 +119,9 @@ namespace _2inch.Controllers
             if(link.shortLink == null || link.longLink == null || link.shortLink.Count() <= 0 || link.longLink.Count() <= 0)
                 return View("EditLinks");
 
-            await Database.EditLink(link);
+            string user = User.Identity.Name;
+
+            await Database.EditLink(link, user);
 
             if(ModelState.IsValid)
                 ModelState.Clear();

@@ -10,8 +10,8 @@ namespace _2inch.Utils
 {
     public class Database
     {
-        private static readonly string SQL_CONNECTION_STRING = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_Connection_String");
-
+        //private static readonly string SQL_CONNECTION_STRING = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_Connection_String");
+        private static readonly string SQL_CONNECTION_STRING = "Server=tcp:shortener-db-server.database.windows.net,1433;Initial Catalog=shortener-db;Persist Security Info=False;User ID=LetnaSkola;Password=10Inches;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
         public async static Task<string> GetLongString(string shortLink)
         {
             
@@ -192,39 +192,66 @@ namespace _2inch.Utils
             }
         }
 
-        public async static Task DeleteLink(int id)
+        public async static Task<bool> DeleteLink(int id, string User)
         {
+            string createdBy = null;
+            bool response = false;
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
-                string queryString = "DELETE FROM links WHERE id = @id";
+                string extractString = "SELECT createdBy FROM links WHERE id = @id";
 
                 await conn.OpenAsync();
 
-                using (SqlCommand delete = new SqlCommand(queryString, conn))
+                using (SqlCommand find = new SqlCommand(extractString, conn))
                 {
-                    delete.Parameters.AddWithValue("@id", id);
+                    find.Parameters.AddWithValue("@id", id);
 
-                    await delete.ExecuteNonQueryAsync();
+                    using (SqlDataReader reader = await find.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            createdBy = reader.GetString(0);
+                        }
+                    }
                 }
+
+                if (User == createdBy)
+                {
+
+                    string queryString = "DELETE FROM links WHERE id = @id";
+
+                    using (SqlCommand delete = new SqlCommand(queryString, conn))
+                    {
+                        delete.Parameters.AddWithValue("@id", id);
+
+                        await delete.ExecuteNonQueryAsync();
+
+                        response = true;
+                    }
+                }
+                return response;
             }
         }
 
-        public async static Task EditLink(Models.Link link)
+        public async static Task EditLink(Models.Link link, string User)
         {
-            using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
-            { //Možno by bolo dobré implementovať kontrolu toho či sa LoggedInUser = createdBy a ak nie, tak nepovoliť edit?
-                string queryString = "UPDATE links";
-                queryString += " SET shortLink = @short, longLink = @long Where id = @id";
+            if (User == link.createdBy)
+            {
+                using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
+                { //Možno by bolo dobré implementovať kontrolu toho či sa LoggedInUser = createdBy a ak nie, tak nepovoliť edit?
+                    string queryString = "UPDATE links";
+                    queryString += " SET shortLink = @short, longLink = @long Where id = @id";
 
-                await conn.OpenAsync();
+                    await conn.OpenAsync();
 
-                using (SqlCommand edit = new SqlCommand(queryString, conn))
-                {
-                    edit.Parameters.AddWithValue("@short", link.shortLink);
-                    edit.Parameters.AddWithValue("@long", link.longLink);
-                    edit.Parameters.AddWithValue("@id", link.id);
+                    using (SqlCommand edit = new SqlCommand(queryString, conn))
+                    {
+                        edit.Parameters.AddWithValue("@short", link.shortLink);
+                        edit.Parameters.AddWithValue("@long", link.longLink);
+                        edit.Parameters.AddWithValue("@id", link.id);
 
-                    await edit.ExecuteNonQueryAsync();
+                        await edit.ExecuteNonQueryAsync();
+                    }
                 }
             }
         }
