@@ -180,9 +180,9 @@ namespace _2inch.Utils
                             string longLink = row["longLink"].ToString();
                             string shortLink = row["shortLink"].ToString();
                             int click = int.Parse(row["clicked"].ToString());
-                            string creationTime = row["creationTime"].ToString();
+                            string[] creationTime = row["creationTime"].ToString().Split(" ");
 
-                            Models.Link linkObj = new Models.Link(id, createdBy, longLink, shortLink, click, creationTime);
+                            Models.Link linkObj = new Models.Link(id, createdBy, longLink, shortLink, click, creationTime[0]);
 
                             LinkList.Add(linkObj); //Pridavame do Listu
                         }
