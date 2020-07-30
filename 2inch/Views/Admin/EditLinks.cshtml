@@ -65,39 +65,36 @@
                 <div class="container">
                     <div class="columns">
                         <div class="column">
-                            @if (ViewBag.EditSelectedLink != null) {
+                            @if (LocalDatabase.EditSelectedLink != null) {
                                 <div class="is-half">
-                                    @using (Html.BeginForm("UpdateSelectedLink", "Admin", FormMethod.Post))
-                                    {
-                                        <article class="message is-info field">
-                                            <div class="message-header">
-                                                <p>Selected link</p>
-                                            </div>
-                                            <div class="message-body">
-                                                You have selected link with id @ViewBag.EditSelectedLink.id and shortLink @ViewBag.EditSelectedLink.shortLink
-                                            </div>
-                                        </article>
-                                        
-                                        <div class="field">
-                                            <label class="label">Short link</label>
-                                            <div class="control">
-                                                @Html.TextBoxFor((M) => M.shortLink, new { @class = "input", required = "required", @placeholder = "stdnt.ms/", @Value = ViewBag.EditSelectedLink.shortLink})
-                                            </div>
+                                    <article class="message is-info field">
+                                        <div class="message-header">
+                                            <p>Selected link</p>
                                         </div>
+                                        <div class="message-body">
+                                            You have selected link with id @LocalDatabase.EditSelectedLink.id and shortLink stdnt.ms/<strong>@LocalDatabase.EditSelectedLink.shortLink</strong>
+                                        </div>
+                                    </article>
+                                    
+                                    <div class="field">
+                                        <label class="label">Short link</label>
+                                        <div class="control">
+                                            <input class="input" type="text" name="shortLinkEdit" placeholder="stdnt.ms/..." title="Nickname" id="shortLinkEdit" value="@LocalDatabase.EditSelectedLink.shortLink" runat="server"/>
+                                        </div>
+                                    </div>
 
-                                        <div class="field">
-                                            <label class="label">Long link</label>
-                                            <div class="control">
-                                                @Html.TextBoxFor(M => M.longLink, new { @class = "input", required = "required", @placeholder = "https://...", @Value = ViewBag.EditSelectedLink.longLink})
-                                            </div>
+                                    <div class="field">
+                                        <label class="label">Long link</label>
+                                        <div class="control">
+                                            <input class="input" type="text" name="longLinkEdit" placeholder="https://..." title="Nickname" id="longLinkEdit" value="@LocalDatabase.EditSelectedLink.longLink" runat="server"/>
                                         </div>
+                                    </div>
 
-                                        <div class="field is-grouped">
-                                            <div class="control">
-                                                <button class="button is-link">Edit</button>
-                                            </div>
+                                    <div class="field is-grouped">
+                                        <div class="control">
+                                            <a id="edit-link" class="button is-link">Edit</a>
                                         </div>
-                                    }
+                                    </div>
                                 </div>
                             }
                             @if (ViewBag.Edited != null) {
@@ -106,7 +103,7 @@
                                         <p>Edited link</p>
                                     </div>
                                     <div class="message-body">
-                                        You have succesfuly edited link with id @ViewBag.Edited
+                                        You have succesfuly edited link @ViewBag.Edited.shortLink
                                     </div>
                                 </article>
                                 {
@@ -126,7 +123,7 @@
                                     ViewBag.LinkDeleted = null;
                                 }
                             }
-                            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth add-link">
                                 <thead>
                                     <tr>
                                         <th>Index</th>
@@ -174,6 +171,7 @@
     </div>
     </section>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="~/js/index.js"></script>
 </body>
 </html>

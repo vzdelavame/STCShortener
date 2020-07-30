@@ -92,7 +92,7 @@ namespace _2inch.Controllers
         public async Task<IActionResult> EditSelectedLink(int id) {
             Models.Link link = await Database.GetLinkById(id);
 
-            ViewBag.EditSelectedLink = link;
+            LocalDatabase.EditSelectedLink = link;
             return View("EditLinks");
         }
 
@@ -111,18 +111,27 @@ namespace _2inch.Controllers
             return LinkList;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UpdateSelectedLink(Models.Link link)
+        [HttpGet]
+        public async Task<IActionResult> UpdateSelectedLink(string shortLink, string longLink)
         {
-            if(link.shortLink == null || link.longLink == null || link.shortLink.Count() <= 0 || link.longLink.Count() <= 0)
+            Console.WriteLine(shortLink + " " + longLink);
+            Link link = LocalDatabase.EditSelectedLink;
+
+            link.shortLink = shortLink;
+            link.longLink = longLink;
+
+            LocalDatabase.EditSelectedLink = null;
+
+            if(link.shortLink == null || link.longLink == null || link.shortLink.Count() <= 0 || link.longLink.Count() <= 0) {
                 return View("EditLinks");
+            }
 
             await Database.EditLink(link);
 
             if(ModelState.IsValid)
                 ModelState.Clear();
 
-            ViewBag.Edited = link.id;
+            ViewBag.Edited = link;
 
             await reloadLinks();
             return View("EditLinks");
