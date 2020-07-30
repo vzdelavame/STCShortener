@@ -70,7 +70,7 @@ namespace _2inch.Utils
                         Adapter.Fill(table);
 
                         foreach (DataRow row in table.Rows)
-                        { //Vyberame data z Table, vytvarame Objekty a populujeme ich informaciami
+                        { 
                             string createdBy = row["createdBy"].ToString();
                             string longLink = row["longLink"].ToString();
                             string shortLink = row["shortLink"].ToString();
@@ -180,9 +180,11 @@ namespace _2inch.Utils
                             string longLink = row["longLink"].ToString();
                             string shortLink = row["shortLink"].ToString();
                             int click = int.Parse(row["clicked"].ToString());
-                            string[] creationTime = row["creationTime"].ToString().Split(" ");
 
-                            Models.Link linkObj = new Models.Link(id, createdBy, longLink, shortLink, click, creationTime[0]);
+                            DateTime creationDT = DateTime.Parse(row["creationTime"].ToString());
+                            string dateTime = "";   //TODO:Toto vyeditujte tak, v akom formate to chcete ukazovať (creationDT.Day + "/"... alebo nieco take)
+
+                            Models.Link linkObj = new Models.Link(id, createdBy, longLink, shortLink, click, dateTime);
 
                             LinkList.Add(linkObj); //Pridavame do Listu
                         }
