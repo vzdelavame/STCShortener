@@ -59,27 +59,31 @@ namespace _2inch
                     name: "Admin",
                     pattern: "{controller=Admin}/{action=Login}");
 
-                endpoints.MapGet("/admin", async context =>
-                {
-                    context.Response.Redirect("/admin/Login");
-                });
-
                 endpoints.MapGet("/{name:alpha}", async context =>
                 {
                     var name = context.Request.RouteValues["name"];
                     string url = Convert.ToString(name);
                     string final = await Database.GetLongString(url);
-                    if(final == null) {
+                    if (final == null)
+                    {
                         context.Response.Redirect("/404");
                         return;
                     }
                     context.Response.Redirect(final);
                 });
 
+#pragma warning disable CS1998
+                endpoints.MapGet("/admin", async context =>
+                {
+                    context.Response.Redirect("/admin/Login");
+                });             
+
                 endpoints.MapGet("/Admin/{name:alpha}", async context =>
                 {
                     context.Response.Redirect("/admin/NotFoundPage");
                 });
+#pragma warning restore CS1998
+
             });
         }
     }
