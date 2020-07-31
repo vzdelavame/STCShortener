@@ -259,5 +259,27 @@ namespace _2inch.Controllers
         public bool hasPermission(int PermissionLevel) {
             return int.Parse(User.FindFirstValue("Permission")) >= PermissionLevel;
         }
+
+        public async Task<IActionResult> FilterLinks()
+        {
+            List<Models.Link> All = new List<Models.Link>(await Database.GetAllLinks());
+            string user = User.Identity.Name;
+            //Co tu treba: ZIstit ci je Checkbox Checked, podla toho bud odfiltrovat alebo nie a reloadnut page.
+            return View("AdminPanel");
+
+            //if(CheckBox.Checked) //Ak je Checked that ukaze iba user
+            //{
+               // List<Models.Link> Filtered = new List<Models.Link>(await Database.ShowOnlyMine(user));
+
+                //LocalDatabase.Links.Add();
+            //}
+
+            //else //Ak nie tak naloaduje vsetko
+            //{
+            //    List<Models.Link> UnFiltered = new List<Models.Link>(await Database.GetAllLinks());
+            //}
+
+            
+        }
     }
 }

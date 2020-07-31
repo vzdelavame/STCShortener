@@ -444,5 +444,44 @@ namespace _2inch.Utils
             }
             return true;
         }
+
+        public async static Task<List<Models.Link>> ShowOnlyMine(string User)
+        {
+            List<Models.Link> FilteredLinks = new List<Models.Link>();
+
+            using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
+            {
+                string queryString = "SELECT * FROM links WHERE createdBy = @User";
+
+                await conn.OpenAsync();
+
+                using (SqlCommand get = new SqlCommand(queryString, conn))
+                {
+                    get.Parameters.AddWithValue("@User", User);
+
+                    using (SqlDataAdapter Adapter = new SqlDataAdapter(get))
+                    {
+                        DataTable table = new DataTable();
+
+                        Adapter.Fill(table);
+
+                        foreach (DataRow row in table.Rows)
+                        { //Vyberame data z Table, vytvarame Objekty a populujeme ich informaciami
+                            int id = int.Parse(row["id"].ToString());
+                            string longLink = row["longLink"].ToString();
+                            string shortLink = row["shortLink"].ToString();
+                            string createdBy = row["createdBy"].ToString();
+                            int click = int.Parse(row["clicked"].ToString());
+                            string[] creationTime = row["creationTime"].ToString().Split(" ");
+
+                            Models.Link linkObj = new Models.Link(id, createdBy, longLink, shortLink, click, creationTime[0]);
+
+                            FilteredLinks.Add(linkObj); //Pridavame do Listu
+                        }
+                    }
+                }
+            }
+            return FilteredLinks;
+        }
     }
 }
