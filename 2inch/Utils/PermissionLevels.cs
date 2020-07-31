@@ -14,7 +14,6 @@ namespace _2inch.Utils
         public static int DeleteLinkPermission = 5;
 
         //Admin
-        public static int OverrideAddLinkPermission = 25;
         public static int OverrideEditLinkPermission = 25;
         public static int OverrideDeleteLinkPermission = 25;
 

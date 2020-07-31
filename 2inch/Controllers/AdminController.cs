@@ -262,6 +262,11 @@ namespace _2inch.Controllers
                 return View("AdminPanel");
             }
 
+            if(link.shortLink != shortLink && await Database.GetLinkByShortLink(shortLink) != null) {
+                ViewBag.AlreadyExist = true;
+                return View("AdminPanel");
+            }
+
             link.shortLink = shortLink;
             link.longLink = longLink;
 
@@ -308,6 +313,11 @@ namespace _2inch.Controllers
                 return View("UserAdmin");
             }
 
+            if(user.Name != userEmail && await Database.GetUserByEmail(userEmail) != null) {
+                ViewBag.AlreadyExist = true;
+                return View("UserAdmin");
+            }
+
             user.Name = userEmail;
             user.PermissionLevel = userPermission;
 
@@ -323,7 +333,7 @@ namespace _2inch.Controllers
             if (ModelState.IsValid)
                 ModelState.Clear();
 
-            ViewBag.EditedUser = user;
+            ViewBag.Edited = user;
             await reloadUsers();
        
             return View("UserAdmin");

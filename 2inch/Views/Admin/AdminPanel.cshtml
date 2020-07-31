@@ -112,6 +112,21 @@
                                         }
                                     }
 
+                                    @if (ViewBag.AlreadyExist != null)
+                                    {
+                                        <article class="message is-danger field">
+                                            <div class="message-header">
+                                                <p>Short link</p>
+                                            </div>
+                                            <div class="message-body">
+                                                This new short link already exists!
+                                            </div>
+                                        </article>
+                                        {
+                                            ViewBag.AlreadyExist = null;
+                                        }
+                                    }
+
                                     <div class="field">
                                         <label class="label">Short link</label>
                                         <div class="control">

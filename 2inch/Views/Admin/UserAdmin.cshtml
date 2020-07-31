@@ -96,6 +96,21 @@
                                         </div>
                                     </article>
 
+                                    @if (ViewBag.AlreadyExist != null)
+                                    {
+                                        <article class="message is-danger field">
+                                            <div class="message-header">
+                                                <p>New user</p>
+                                            </div>
+                                            <div class="message-body">
+                                                This user already exists!
+                                            </div>
+                                        </article>
+                                        {
+                                            ViewBag.AlreadyExist = null;
+                                        }
+                                    }
+
                                     <div class="field">
                                         <label class="label">User email</label>
                                         <div class="control">
@@ -130,7 +145,7 @@
                                         <p>Edited user</p>
                                     </div>
                                     <div class="message-body">
-                                        You have successfully edited user @ViewBag.Edited.Name
+                                        You have successfully edited user <strong>@ViewBag.Edited.Name</strong>
                                     </div>
                                 </article>
                                 {
