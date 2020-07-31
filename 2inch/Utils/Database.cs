@@ -111,7 +111,39 @@ namespace _2inch.Utils
                             string userEmail = row["userEmail"].ToString();
                             int PermissionLevel = int.Parse(row["userPermission"].ToString());
 
-                            Models.Auth authObj = new Models.Auth(userEmail, PermissionLevel);
+                            Models.Auth authObj = new Models.Auth(id, userEmail, PermissionLevel);
+
+                            return authObj;
+                        }
+                    }
+                }
+                return null;
+            }
+        }
+
+        public async static Task<Models.Auth> GetUserByEmail(string userEmail)
+        {
+            
+            using (SqlConnection connection = new SqlConnection(SQL_CONNECTION_STRING)) 
+            {
+                await connection.OpenAsync();
+                using (SqlCommand command = new SqlCommand(null, connection))
+                {
+                    command.CommandText = "SELECT * FROM userAccounts WHERE userEmail = @userEmail";
+                    command.Parameters.AddWithValue("@userEmail", userEmail);
+                    //command.Parameters.AddWithValue("@clicked", clicked+1); Should Update
+                    using (SqlDataAdapter Adapter = new SqlDataAdapter(command))
+                    {
+                        DataTable table = new DataTable();
+
+                        Adapter.Fill(table);
+
+                        foreach (DataRow row in table.Rows)
+                        { //Vyberame data z Table, vytvarame Objekty a populujeme ich informaciami
+                            int id = int.Parse(row["id"].ToString());
+                            int PermissionLevel = int.Parse(row["userPermission"].ToString());
+
+                            Models.Auth authObj = new Models.Auth(id, userEmail, PermissionLevel);
 
                             return authObj;
                         }
@@ -257,6 +289,28 @@ namespace _2inch.Utils
             }
         }
 
+        public async static Task InsertUser(Models.Auth auth)
+        {
+            using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
+            {
+                //Toto by malo vložiť long_link a short_link, tieto názvy stĺpcov som používal podľa predošlích funkcii.
+                string queryString = "INSERT INTO userAccounts (userEmail, userPassword, userPermission)";
+                queryString += " VALUES(@userEmail, @userPassword, @userPermission)";
+
+                await conn.OpenAsync();
+
+                using (SqlCommand insert = new SqlCommand(queryString, conn))
+                {
+                    insert.Parameters.AddWithValue("@userEmail", auth.Name);
+                    insert.Parameters.AddWithValue("@userPassword", ComputeSha256Hash(auth.Pass));
+                    insert.Parameters.AddWithValue("@userPermission", auth.PermissionLevel);
+
+                    await insert.ExecuteNonQueryAsync();
+                    await conn.CloseAsync();
+                }
+            }
+        }
+
         public async static Task<List<Models.Link>> GetAllLinksByUser(string createdBy)
         {
             List<Models.Link> LinkList = new List<Models.Link>(); //List na vsetky rows
@@ -352,10 +406,11 @@ namespace _2inch.Utils
 
                         foreach (DataRow row in table.Rows)
                         { //Vyberame data z Table, vytvarame Objekty a populujeme ich informaciami
+                            int id = int.Parse(row["id"].ToString());
                             int PermissionLevel = int.Parse(row["userPermission"].ToString());
                             string userEmail = row["userEmail"].ToString();
 
-                            Models.Auth authObj = new Models.Auth(userEmail, PermissionLevel);
+                            Models.Auth authObj = new Models.Auth(id, userEmail, PermissionLevel);
 
                             AuthList.Add(authObj); //Pridavame do Listu
                         }
@@ -438,6 +493,27 @@ namespace _2inch.Utils
                     edit.Parameters.AddWithValue("@long", link.longLink);
                     edit.Parameters.AddWithValue("@newOwner", newOwner);
                     edit.Parameters.AddWithValue("@id", link.id);
+
+                    await edit.ExecuteNonQueryAsync();
+                }
+            }
+            return true;
+        }
+
+        public async static Task<bool> EditUser(Models.Auth user)
+        {
+            using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
+            { //Možno by bolo dobré implementovať kontrolu toho či sa LoggedInUser = createdBy a ak nie, tak nepovoliť edit?
+                string queryString = "UPDATE userAccounts";
+                queryString += " SET userEmail = @userEmail, userPermission = @userPermission WHERE id = @id";
+
+                await conn.OpenAsync();
+
+                using (SqlCommand edit = new SqlCommand(queryString, conn))
+                {
+                    edit.Parameters.AddWithValue("@userEmail", user.Name);
+                    edit.Parameters.AddWithValue("@userPermission", user.PermissionLevel);
+                    edit.Parameters.AddWithValue("@id", user.id);
 
                     await edit.ExecuteNonQueryAsync();
                 }

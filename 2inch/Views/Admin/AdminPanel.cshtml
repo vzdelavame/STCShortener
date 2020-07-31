@@ -43,6 +43,14 @@
                     <a class="navbar-item" href=" @Url.ActionLink("AdminPanel", "Admin") ">
                         Edit Links
                     </a>
+
+                    <a class="navbar-item" href=" @Url.ActionLink("AddUserAdmin", "Admin") ">
+                        Add User
+                    </a>
+
+                    <a class="navbar-item" href=" @Url.ActionLink("UserAdmin", "Admin") ">
+                        Edit Users
+                    </a>
                 </div>
 
                 <div class="navbar-end">
@@ -132,7 +140,7 @@
                                         </div>
 
                                         <div class="control">
-                                            <a href=" @Url.ActionLink("DiscardEdit", "Admin") " class="button is-danger">Discard</a>
+                                            <a href=" @Url.ActionLink("DiscardLinkEdit", "Admin") " class="button is-danger">Discard</a>
                                         </div>
                                     </div>
                                 </div>

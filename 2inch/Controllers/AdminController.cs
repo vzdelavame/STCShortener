@@ -41,6 +41,13 @@ namespace _2inch.Controllers
             return View("UserAdmin");
         }
 
+        public async Task<IActionResult> AddUserAdmin()
+        {
+            if(!User.Identity.IsAuthenticated) return View("Login");
+
+            return View("AddUserAdmin");
+        }
+
         public async Task<IActionResult> Logout()
         {
             if(!User.Identity.IsAuthenticated) return View("Login");
@@ -80,6 +87,11 @@ namespace _2inch.Controllers
         {
             if(!User.Identity.IsAuthenticated) return View("Login");
 
+            if(!hasPermission(PermissionLevels.AddLinkPermission)) {
+                ViewBag.CanNotAdd = true;
+                return View("AddLink");
+            }
+
             if(newlink.shortLink == null || newlink.longLink == null || newlink.shortLink.Count() <= 0 || newlink.longLink.Count() <= 0)
                 return View("AddLink");
 
@@ -100,6 +112,29 @@ namespace _2inch.Controllers
             }
 
             return View("AddLink");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddUser(Models.Auth newUser)
+        {
+            if(!User.Identity.IsAuthenticated) return View("Login");
+
+            if(!hasPermission(PermissionLevels.AddUsersPermission)) {
+                ViewBag.CanNotAdd = true;
+                return View("AddUserAdmin");
+            }
+
+            ViewBag.Duple = await Database.GetUserByEmail(newUser.Name);
+            if (ViewBag.Duple == null)
+            {
+                ViewBag.NewUser = newUser;
+                await Database.InsertUser(newUser);
+
+                if(ModelState.IsValid)
+                    ModelState.Clear();
+            }
+
+            return View("AddUserAdmin");
         }
 
         public async Task<IActionResult> EditSelectedLink(int id, string createdBy) {
@@ -124,7 +159,7 @@ namespace _2inch.Controllers
 
             if(!hasPermission(PermissionLevels.EditUsersPermission)) {
                 ViewBag.CanNotedit = true;
-                return View("AdminPanel");
+                return View("UserAdmin");
             }
 
             Models.Auth auth = await Database.GetUserById(id);
@@ -133,7 +168,7 @@ namespace _2inch.Controllers
                 LocalDatabase.EditSelectedUser.Add(User.Identity.Name, auth);
             else
                 LocalDatabase.EditSelectedUser[User.Identity.Name] = auth;
-            return View("AdminPanel");
+            return View("UserAdmin");
         }
 
         public async Task<IActionResult> DeleteSelectedLink(int id, string createdBy) {
@@ -164,14 +199,14 @@ namespace _2inch.Controllers
 
             if(!hasPermission(PermissionLevels.DeleteUsersPermission)) {
                 ViewBag.CanNotedit = true;
-                return View("AdminPanel");
+                return View("UserAdmin");
             }
 
             await Database.DeleteUser(id);
             await reloadUsers();
             ViewBag.UserDeleted = id;
 
-            return View("AdminPanel");
+            return View("UserAdmin");
         }
 
         public IActionResult DiscardLinkEdit() {
@@ -187,7 +222,7 @@ namespace _2inch.Controllers
 
             LocalDatabase.EditSelectedUser.Remove(User.Identity.Name);
             ViewBag.DiscardEdit = true;
-            return View("AdminPanel");
+            return View("UserAdmin");
         }
 
         public async Task<List<Models.Link>> reloadLinks(bool allLinks) {
@@ -254,6 +289,39 @@ namespace _2inch.Controllers
             await reloadLinks(false);
        
             return View("AdminPanel");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateSelectedUser(int id, string userEmail, int userPermission)
+        {
+            if(!User.Identity.IsAuthenticated) return View("Login");
+
+            Auth user = LocalDatabase.EditSelectedUser.ContainsKey(User.Identity.Name) ? LocalDatabase.EditSelectedUser[User.Identity.Name] : null;
+
+            if(user == null || id != user.id) {
+                ViewBag.CanNotedit = true;
+                return View("UserAdmin");
+            }
+
+            user.Name = userEmail;
+            user.PermissionLevel = userPermission;
+
+            if(!hasPermission(PermissionLevels.EditUsersPermission)) {
+                ViewBag.CanNotedit = true;
+                return View("UserAdmin");
+            }
+
+            LocalDatabase.EditSelectedUser.Remove(User.Identity.Name);
+
+            await Database.EditUser(user);
+
+            if (ModelState.IsValid)
+                ModelState.Clear();
+
+            ViewBag.EditedUser = user;
+            await reloadUsers();
+       
+            return View("UserAdmin");
         }
 
         public bool hasPermission(int PermissionLevel) {

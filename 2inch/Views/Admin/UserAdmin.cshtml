@@ -44,6 +44,10 @@
                         Edit Links
                     </a>
 
+                    <a class="navbar-item" href=" @Url.ActionLink("AddUserAdmin", "Admin") ">
+                        Add User
+                    </a>
+
                     <a class="navbar-item" href=" @Url.ActionLink("UserAdmin", "Admin") ">
                         Edit Users
                     </a>
@@ -100,21 +104,21 @@
                                     </div>
 
                                     <div class="field">
-                                        <label class="label">User email</label>
+                                        <label class="label">Permission level</label>
                                         <div class="control">
-                                            <input class="input" type="text" id="userEmailEdit" value="@currentEditUser.Name" runat="server" />
+                                            <input class="input" type="text" id="userPermissionEdit" value="@currentEditUser.PermissionLevel" runat="server" />
                                         </div>
                                     </div>
 
-                                    <input class="input" type="hidden" id="idEdit" value="@currentEditUser.Name" />
+                                    <input class="input" type="hidden" id="idEdit" value="@currentEditUser.id" />
 
                                     <div class="field is-grouped">
                                         <div class="control">
-                                            <a id="edit-link" class="button is-link">Edit</a>
+                                            <a id="edit-user" class="button is-link">Edit</a>
                                         </div>
 
                                         <div class="control">
-                                            <a href=" @Url.ActionLink("DiscardEdit", "Admin") " class="button is-danger">Discard</a>
+                                            <a href=" @Url.ActionLink("DiscardUserEdit", "Admin") " class="button is-danger">Discard</a>
                                         </div>
                                     </div>
                                 </div>
@@ -123,28 +127,28 @@
                             {
                                 <article class="message is-success field">
                                     <div class="message-header">
-                                        <p>Edited link</p>
+                                        <p>Edited user</p>
                                     </div>
                                     <div class="message-body">
-                                        You have successfully edited link @ViewBag.Edited.shortLink
+                                        You have successfully edited user @ViewBag.Edited.Name
                                     </div>
                                 </article>
                                 {
                                     ViewBag.Edited = null;
                                 }
                             }
-                            @if (ViewBag.LinkDeleted != null)
+                            @if (ViewBag.UserDeleted != null)
                             {
                                 <article class="message is-danger field">
                                     <div class="message-header">
-                                        <p>Deleted link</p>
+                                        <p>Deleted user</p>
                                     </div>
                                     <div class="message-body">
-                                        You have successfully deleted link with id @ViewBag.LinkDeleted
+                                        You have successfully deleted user with id @ViewBag.UserDeleted
                                     </div>
                                 </article>
                                 {
-                                    ViewBag.LinkDeleted = null;
+                                    ViewBag.UserDeleted = null;
                                 }
                             }
                             @if (ViewBag.DiscardEdit != null)
@@ -165,11 +169,8 @@
                                 <thead>
                                     <tr>
                                         <th>Index</th>
-                                        <th>Short Link</th>
-                                        <th>Long Link</th>
-                                        <th>Created by</th>
-                                        <th>Time of creation</th>
-                                        <th>Clicked</th>
+                                        <th>User email</th>
+                                        <th>User permission</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
                                     </tr>
@@ -179,28 +180,25 @@
                                     {
                                         @foreach (_2inch.Models.Auth user in users)
                                         {
-                                            /*<tr>
-                                                <th>@link.id</th>
-                                                <td>@link.shortLink</td>
-                                                <td>@link.longLink</td>
-                                                <td>@link.createdBy</td>
-                                                <td>@link.creationTime</td>
-                                                <td>@link.clicked</td>
+                                            <tr>
+                                                <th>@user.id</th>
+                                                <td>@user.Name</td>
+                                                <td>@user.PermissionLevel</td>
                                                 <td>
-                                                    <a href="@Url.ActionLink("EditSelectedLink", "Admin", new { id = link.id, createdBy = link.createdBy }) " class="button is-info is-outlined">
+                                                    <a href="@Url.ActionLink("EditSelectedUser", "Admin", new { id = user.id }) " class="button is-info is-outlined">
                                                         <span class="icon is-small">
                                                             <i class="fas fa-edit"></i>
                                                         </span>
                                                     </a>
                                                 </td>
                                                 <td>
-                                                    <a href="@Url.ActionLink("DeleteSelectedLink", "Admin", new { id = link.id, createdBy = link.createdBy }) " onclick="return GetConfirmation();" class="button is-danger is-outlined">
+                                                    <a href="@Url.ActionLink("DeleteSelectedUser", "Admin", new { id = user.id }) " onclick="return GetConfirmation();" class="button is-danger is-outlined">
                                                         <span class="icon is-small">
                                                             <i class="fas fa-times"></i>
                                                         </span>
                                                     </a>
                                                 </td>
-                                            </tr>*/
+                                            </tr>
                                         }
                                     }
                                 </tbody>

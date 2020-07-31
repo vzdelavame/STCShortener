@@ -18,6 +18,15 @@ $(document).ready(function() {
 
         window.location = "/Admin/UpdateSelectedLink?id=" + id +"&shortLink=" + shortLink + "&longLink=" + longLink + "&owner=" + owner;
     });
+
+    $("#edit-user").click(function() {
+  
+        var id = $("#idEdit").val();
+        var userEmail = $("#userEmailEdit").val();
+        var userPermission = $("#userPermissionEdit").val();
+
+        window.location = "/Admin/UpdateSelectedUser?id=" + id +"&userEmail=" + userEmail + "&userPermission=" + userPermission;
+    });
 });
 
 function GetConfirmation() {

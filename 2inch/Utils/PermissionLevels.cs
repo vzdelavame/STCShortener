@@ -19,6 +19,7 @@ namespace _2inch.Utils
         public static int OverrideDeleteLinkPermission = 25;
 
         //Master Admin
+        public static int AddUsersPermission = 50;
         public static int ViewUsersPermission = 50;
         public static int EditUsersPermission = 50;
         public static int DeleteUsersPermission = 50;

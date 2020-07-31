@@ -1,5 +1,5 @@
 ﻿@page
-@model _2inch.Models.Link
+@model _2inch.Models.Auth
 @{
 
 	if(!User.Identity.IsAuthenticated) {
@@ -14,7 +14,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
-    <title>Add Link - Student Shortener</title>
+    <title>Add User - Student Shortener</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
     <link rel="stylesheet" href="~/css/index.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
@@ -66,7 +66,7 @@
                     <div class="container">
                         <div class="columns is-centered">
                             <div class="column is-half">
-                                @using (Html.BeginForm("AddLinks", "Admin", FormMethod.Post))
+                                @using (Html.BeginForm("AddUser", "Admin", FormMethod.Post))
                                 {
                                     @if (ViewBag.Duple != null)
                                     {
@@ -75,48 +75,60 @@
                                                 <p>Error</p>
                                             </div>
                                             <div class="message-body">
-                                                This short link is already owned by @ViewBag.Duple.createdBy
+                                                This user already exists!
                                             </div>
                                         </article>
                                     }
-                                    @if (ViewBag.Error == true)
-                                    {
-                                        <article class="message is-danger field">
-                                            <div class="message-header">
-                                                <p>Error</p>
-                                            </div>
-                                            <div class="message-body">
-                                                This short link can not be added!
-                                            </div>
-                                        </article>
-                                    }
-                                    @if (ViewBag.NewLink != null)
+                                    @if (ViewBag.NewUser != null)
                                     {
                                         <article class="message is-success field">
                                             <div class="message-header">
-                                                <p>Link added</p>
+                                                <p>User added</p>
                                             </div>
                                             <div class="message-body">
-                                                You have successfully added <strong>@ViewBag.NewLink.shortLink</strong> link!
+                                                You have successfully added user <strong>@ViewBag.NewUser.Name</strong>!
                                             </div>
                                         </article>
                                         {
-                                            ViewBag.NewLink = null;
+                                            ViewBag.NewUser = null;
+                                        }
+                                    }
+                                    @if (ViewBag.CanNotAdd != null)
+                                    {
+                                        <article class="message is-danger field">
+                                            <div class="message-header">
+                                                <p>Can not add user</p>
+                                            </div>
+                                            <div class="message-body">
+                                                Can not add new user! Maybe you do not have permission?
+                                            </div>
+                                        </article>
+                                        {
+                                            ViewBag.CanNotAdd = null;
                                         }
                                     }
                                     <div class="field">
-                                        <label class="label">Short link</label>
+                                        <label class="label">User email</label>
                                         <div class="control">
-                                            @Html.TextBoxFor(M => M.shortLink, new { @class = "input", required = "required", @placeholder = "stdnt.ms/", @id = "shortLink" })
+                                            @Html.TextBoxFor(M => M.Name, new { @class = "input", required = "required" })
                                         </div>
                                     </div>
 
                                     <div class="field">
-                                        <label class="label">Long link</label>
+                                        <label class="label">User password</label>
                                         <div class="control">
-                                            @Html.TextBoxFor(M => M.longLink, new { @class = "input", required = "required", @placeholder = "https://...", @id = "longLink" })
+                                            @Html.TextBoxFor(M => M.Pass, new { @class = "input", required = "required" })
                                         </div>
                                     </div>
+
+                                    <div class="field">
+                                        <label class="label">User permission</label>
+                                        <label class="checkbox">Default user - 5, admin - 25, master admin - 50</label>
+                                        <div class="control">
+                                            @Html.TextBoxFor(M => M.PermissionLevel, new { @class = "input", required = "required" })
+                                        </div>
+                                    </div>
+
                                     <div class="field is-grouped">
                                         <div class="control">
                                             <button class="button is-link">Submit</button>
