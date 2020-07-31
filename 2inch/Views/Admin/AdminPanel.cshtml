@@ -205,14 +205,14 @@
                                                 <td>@link.creationTime</td>
                                                 <td>@link.clicked</td>
                                                 <td>
-                                                    <a href="@Url.ActionLink("EditSelectedLink", "Admin", new { id = link.id }) " class="button is-info is-outlined">
+                                                    <a href="@Url.ActionLink("EditSelectedLink", "Admin", new { id = link.id, createdBy = link.createdBy }) " class="button is-info is-outlined">
                                                         <span class="icon is-small">
                                                             <i class="fas fa-edit"></i>
                                                         </span>
                                                     </a>
                                                 </td>
                                                 <td>
-                                                    <a href="@Url.ActionLink("DeleteSelectedLink", "Admin", new { id = link.id }) " onclick="return GetConfirmation();" class="button is-danger is-outlined">
+                                                    <a href="@Url.ActionLink("DeleteSelectedLink", "Admin", new { id = link.id, createdBy = link.createdBy }) " onclick="return GetConfirmation();" class="button is-danger is-outlined">
                                                         <span class="icon is-small">
                                                             <i class="fas fa-times"></i>
                                                         </span>

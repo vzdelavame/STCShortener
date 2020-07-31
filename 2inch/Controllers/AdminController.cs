@@ -28,9 +28,17 @@ namespace _2inch.Controllers
         public async Task<IActionResult> AdminPanel()
         {
             if(!User.Identity.IsAuthenticated) return View("Login");
-            await reloadLinks();
+            await reloadLinks(false);
 
             return View("AdminPanel");
+        }
+
+        public async Task<IActionResult> UserAdmin()
+        {
+            if(!User.Identity.IsAuthenticated) return View("Login");
+            await reloadUsers();
+
+            return View("UserAdmin");
         }
 
         public async Task<IActionResult> Logout()
@@ -52,10 +60,12 @@ namespace _2inch.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(Models.Auth auth) //Script for Login
         {
-            if (await Database.VerifyAdminCredentials(auth)) {
+            auth = await Database.VerifyAdminCredentials(auth);
+            if (auth != null) {
                 var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
                 identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, auth.Name));
                 identity.AddClaim(new Claim(ClaimTypes.Name, auth.Name));
+                identity.AddClaim(new Claim("Permission", auth.PermissionLevel + ""));
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = false });
 
@@ -88,8 +98,13 @@ namespace _2inch.Controllers
             return View("AddLink");
         }
 
-        public async Task<IActionResult> EditSelectedLink(int id) {
+        public async Task<IActionResult> EditSelectedLink(int id, string createdBy) {
             if(!User.Identity.IsAuthenticated) return View("Login");
+
+            if(!hasPermission(PermissionLevels.EditLinkPermission) && !hasPermission(PermissionLevels.OverrideEditLinkPermission)) {
+                ViewBag.CanNotedit = true;
+                return View("AdminPanel");
+            }
 
             Models.Link link = await Database.GetLinkById(id);
 
@@ -100,21 +115,62 @@ namespace _2inch.Controllers
             return View("AdminPanel");
         }
 
-        public async Task<IActionResult> DeleteSelectedLink(int id) {
+        public async Task<IActionResult> EditSelectedUser(int id) {
             if(!User.Identity.IsAuthenticated) return View("Login");
 
-            string user = User.Identity.Name;
-            if (await Database.DeleteLink(id, user))
-            {
-                await reloadLinks();
-                ViewBag.LinkDeleted = id;
-            }else {
-                ViewBag.CanNotEdit = true;
+            if(!hasPermission(PermissionLevels.EditUsersPermission)) {
+                ViewBag.CanNotedit = true;
+                return View("AdminPanel");
             }
+
+            Models.Auth auth = await Database.GetUserById(id);
+
+            if(!LocalDatabase.EditSelectedUser.ContainsKey(User.Identity.Name))
+                LocalDatabase.EditSelectedUser.Add(User.Identity.Name, auth);
+            else
+                LocalDatabase.EditSelectedUser[User.Identity.Name] = auth;
             return View("AdminPanel");
         }
 
-        public IActionResult DiscardEdit() {
+        public async Task<IActionResult> DeleteSelectedLink(int id, string createdBy) {
+            if(!User.Identity.IsAuthenticated) return View("Login");
+
+            if(!hasPermission(PermissionLevels.DeleteLinkPermission)) {
+                ViewBag.CanNotedit = true;
+                return View("AdminPanel");
+            }
+
+            if(createdBy != User.Identity.Name && !hasPermission(PermissionLevels.OverrideDeleteLinkPermission)) {
+                ViewBag.CanNotedit = true;
+                return View("AdminPanel");
+            }
+
+            string user = User.Identity.Name;
+            await Database.DeleteLink(id, user);
+
+            await reloadLinks(false);
+
+            ViewBag.LinkDeleted = id;
+
+            return View("AdminPanel");
+        }
+
+        public async Task<IActionResult> DeleteSelectedUser(int id) {
+            if(!User.Identity.IsAuthenticated) return View("Login");
+
+            if(!hasPermission(PermissionLevels.DeleteUsersPermission)) {
+                ViewBag.CanNotedit = true;
+                return View("AdminPanel");
+            }
+
+            await Database.DeleteUser(id);
+            await reloadUsers();
+            ViewBag.UserDeleted = id;
+
+            return View("AdminPanel");
+        }
+
+        public IActionResult DiscardLinkEdit() {
             if(!User.Identity.IsAuthenticated) return View("Login");
 
             LocalDatabase.EditSelectedLink.Remove(User.Identity.Name);
@@ -122,12 +178,32 @@ namespace _2inch.Controllers
             return View("AdminPanel");
         }
 
-        public async Task<List<Models.Link>> reloadLinks() {
-            List<Models.Link> LinkList = await Database.GetAllLinks(User.Identity.Name);
+        public IActionResult DiscardUserEdit() {
+            if(!User.Identity.IsAuthenticated) return View("Login");
+
+            LocalDatabase.EditSelectedUser.Remove(User.Identity.Name);
+            ViewBag.DiscardEdit = true;
+            return View("AdminPanel");
+        }
+
+        public async Task<List<Models.Link>> reloadLinks(bool allLinks) {
+            List<Models.Link> LinkList = allLinks ? await Database.GetAllLinks() : await Database.GetAllLinksByUser(User.Identity.Name);
 
             LocalDatabase.Links.Remove(User.Identity.Name);
             LocalDatabase.Links.Add(User.Identity.Name, LinkList);
             return LinkList;
+        }
+
+        public async Task<List<Models.Auth>> reloadUsers() {
+            if(!hasPermission(PermissionLevels.ViewUsersPermission)) {
+                return null;
+            }
+
+            List<Models.Auth> AuthList = await Database.GetAllUsers();
+
+            LocalDatabase.Users.Remove(User.Identity.Name);
+            LocalDatabase.Users.Add(User.Identity.Name, AuthList);
+            return AuthList;
         }
 
         [HttpGet]
@@ -150,6 +226,11 @@ namespace _2inch.Controllers
                 return View("AdminPanel");
             }
 
+            if(link.createdBy != User.Identity.Name && !hasPermission(PermissionLevels.OverrideEditLinkPermission)) {
+                ViewBag.CanNotedit = true;
+                return View("AdminPanel");
+            }
+
             if(link.createdBy != owner) {
                 if(!await Database.CheckOwner(owner)) {
                     ViewBag.OwnerNotExist = true;
@@ -160,18 +241,19 @@ namespace _2inch.Controllers
             LocalDatabase.EditSelectedLink.Remove(User.Identity.Name);
             string user = User.Identity.Name;
 
-            if (await Database.EditLink(link, user, owner))
-            {
-                if (ModelState.IsValid)
-                    ModelState.Clear();
+            await Database.EditLink(link, user, owner);
 
-                ViewBag.Edited = link;
-            }else {
-                ViewBag.CanNotedit = true;
-            }
-            await reloadLinks();
+            if (ModelState.IsValid)
+                ModelState.Clear();
+
+            ViewBag.Edited = link;
+            await reloadLinks(false);
        
             return View("AdminPanel");
+        }
+
+        public bool hasPermission(int PermissionLevel) {
+            return int.Parse(User.FindFirstValue("Permission")) >= PermissionLevel;
         }
     }
 }

@@ -89,6 +89,38 @@ namespace _2inch.Utils
             }
         }
 
+        public async static Task<Models.Auth> GetUserById(int id)
+        {
+            
+            using (SqlConnection connection = new SqlConnection(SQL_CONNECTION_STRING)) 
+            {
+                await connection.OpenAsync();
+                using (SqlCommand command = new SqlCommand(null, connection))
+                {
+                    command.CommandText = "SELECT * FROM userAccounts WHERE id = @id";
+                    command.Parameters.AddWithValue("@id", id);
+                    //command.Parameters.AddWithValue("@clicked", clicked+1); Should Update
+                    using (SqlDataAdapter Adapter = new SqlDataAdapter(command))
+                    {
+                        DataTable table = new DataTable();
+
+                        Adapter.Fill(table);
+
+                        foreach (DataRow row in table.Rows)
+                        { //Vyberame data z Table, vytvarame Objekty a populujeme ich informaciami
+                            string userEmail = row["userEmail"].ToString();
+                            int PermissionLevel = int.Parse(row["userPermission"].ToString());
+
+                            Models.Auth authObj = new Models.Auth(userEmail, PermissionLevel);
+
+                            return authObj;
+                        }
+                    }
+                }
+                return null;
+            }
+        }
+
         public async static Task<Models.Link> GetLinkByShortLink(string shortLink)
         {
             
@@ -159,11 +191,11 @@ namespace _2inch.Utils
             }
         }
 
-        public async static Task<bool> VerifyAdminCredentials(Models.Auth login) //funkcia na porovanie hesla v databaze a zadaneho hesla
+        public async static Task<Models.Auth> VerifyAdminCredentials(Models.Auth login) //funkcia na porovanie hesla v databaze a zadaneho hesla
         {
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
-                string queryString = $"SELECT userPassword FROM userAccounts WHERE userEmail = @user";
+                string queryString = $"SELECT userPassword, userPermission FROM userAccounts WHERE userEmail = @user";
                 using (SqlCommand command = new SqlCommand(queryString, conn))
                 {
                     command.Parameters.AddWithValue("@user", login.Name);
@@ -172,11 +204,15 @@ namespace _2inch.Utils
                     {
                         if (await reader.ReadAsync())
                         {
-                            return reader.GetString(0) == ComputeSha256Hash(login.Pass);
+                            if(reader.GetString(0) != ComputeSha256Hash(login.Pass))
+                                return null;
+                            login.Pass = "";
+                            login.PermissionLevel = reader.GetInt32(1);
+                            return login;
                         }
                     }
                 }
-                return false;
+                return null;
             }
         }
 
@@ -221,7 +257,7 @@ namespace _2inch.Utils
             }
         }
 
-        public async static Task<List<Models.Link>> GetAllLinks(string createdBy)
+        public async static Task<List<Models.Link>> GetAllLinksByUser(string createdBy)
         {
             List<Models.Link> LinkList = new List<Models.Link>(); //List na vsetky rows
 
@@ -259,33 +295,81 @@ namespace _2inch.Utils
             }
         }
 
-        public async static Task<bool> DeleteLink(int id, string User)
+        public async static Task<List<Models.Link>> GetAllLinks()
         {
-            string createdBy = null;
-            bool response = false;
+            List<Models.Link> LinkList = new List<Models.Link>(); //List na vsetky rows
+
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
-                string extractString = "SELECT createdBy FROM links WHERE id = @id";
+                string queryString = "SELECT * FROM links";
 
                 await conn.OpenAsync();
 
-                using (SqlCommand find = new SqlCommand(extractString, conn))
-                {
-                    find.Parameters.AddWithValue("@id", id);
-
-                    using (SqlDataReader reader = await find.ExecuteReaderAsync())
+                using (SqlCommand getAll = new SqlCommand(queryString, conn))
+                {   
+                    using (SqlDataAdapter Adapter = new SqlDataAdapter(getAll))
                     {
-                        if (await reader.ReadAsync())
-                        {
-                            createdBy = reader.GetString(0);
+                        DataTable table = new DataTable();
+
+                        Adapter.Fill(table);
+
+                        foreach (DataRow row in table.Rows)
+                        { //Vyberame data z Table, vytvarame Objekty a populujeme ich informaciami
+                            int id = int.Parse(row["id"].ToString());
+                            string longLink = row["longLink"].ToString();
+                            string shortLink = row["shortLink"].ToString();
+                            string createdBy = row["createdBy"].ToString();
+                            int click = int.Parse(row["clicked"].ToString());
+                            string[] creationTime = row["creationTime"].ToString().Split(" ");
+
+                            Models.Link linkObj = new Models.Link(id, createdBy, longLink, shortLink, click, creationTime[0]);
+
+                            LinkList.Add(linkObj); //Pridavame do Listu
                         }
                     }
                 }
+                return LinkList;
+            }
+        }
 
-                if (User == createdBy)
-                {
+        public async static Task<List<Models.Auth>> GetAllUsers()
+        {
+            List<Models.Auth> AuthList = new List<Models.Auth>(); //List na vsetky rows
 
-                    string queryString = "DELETE FROM links WHERE id = @id";
+            using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
+            {
+                string queryString = "SELECT * FROM userAccounts";
+
+                await conn.OpenAsync();
+
+                using (SqlCommand getAll = new SqlCommand(queryString, conn))
+                {   
+                    using (SqlDataAdapter Adapter = new SqlDataAdapter(getAll))
+                    {
+                        DataTable table = new DataTable();
+
+                        Adapter.Fill(table);
+
+                        foreach (DataRow row in table.Rows)
+                        { //Vyberame data z Table, vytvarame Objekty a populujeme ich informaciami
+                            int PermissionLevel = int.Parse(row["userPermission"].ToString());
+                            string userEmail = row["userEmail"].ToString();
+
+                            Models.Auth authObj = new Models.Auth(userEmail, PermissionLevel);
+
+                            AuthList.Add(authObj); //Pridavame do Listu
+                        }
+                    }
+                }
+                return AuthList;
+            }
+        }
+
+        public async static Task<bool> DeleteLink(int id, string User)
+        {
+            using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
+            {
+                string queryString = "DELETE FROM links WHERE id = @id";
 
                     using (SqlCommand delete = new SqlCommand(queryString, conn))
                     {
@@ -293,10 +377,25 @@ namespace _2inch.Utils
 
                         await delete.ExecuteNonQueryAsync();
 
-                        response = true;
+                        return true;
                     }
-                }
-                return response;
+            }
+        }
+
+        public async static Task<bool> DeleteUser(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
+            {
+                string queryString = "DELETE FROM userAccounts WHERE id = @id";
+
+                    using (SqlCommand delete = new SqlCommand(queryString, conn))
+                    {
+                        delete.Parameters.AddWithValue("@id", id);
+
+                        await delete.ExecuteNonQueryAsync();
+
+                        return true;
+                    }
             }
         }
 
@@ -326,29 +425,24 @@ namespace _2inch.Utils
 
         public async static Task<bool> EditLink(Models.Link link, string User, string newOwner)
         {
-            bool check = false;
-            if (User == link.createdBy)
-            {
-                check = true;
-                using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
-                { //Možno by bolo dobré implementovať kontrolu toho či sa LoggedInUser = createdBy a ak nie, tak nepovoliť edit?
-                    string queryString = "UPDATE links";
-                    queryString += " SET shortLink = @short, longLink = @long, createdBy = @newOwner Where id = @id";
+            using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
+            { //Možno by bolo dobré implementovať kontrolu toho či sa LoggedInUser = createdBy a ak nie, tak nepovoliť edit?
+                string queryString = "UPDATE links";
+                queryString += " SET shortLink = @short, longLink = @long, createdBy = @newOwner WHERE id = @id";
 
-                    await conn.OpenAsync();
+                await conn.OpenAsync();
 
-                    using (SqlCommand edit = new SqlCommand(queryString, conn))
-                    {
-                        edit.Parameters.AddWithValue("@short", link.shortLink);
-                        edit.Parameters.AddWithValue("@long", link.longLink);
-                        edit.Parameters.AddWithValue("@newOwner", newOwner);
-                        edit.Parameters.AddWithValue("@id", link.id);
+                using (SqlCommand edit = new SqlCommand(queryString, conn))
+                {
+                    edit.Parameters.AddWithValue("@short", link.shortLink);
+                    edit.Parameters.AddWithValue("@long", link.longLink);
+                    edit.Parameters.AddWithValue("@newOwner", newOwner);
+                    edit.Parameters.AddWithValue("@id", link.id);
 
-                        await edit.ExecuteNonQueryAsync();
-                    }
+                    await edit.ExecuteNonQueryAsync();
                 }
             }
-            return check;
+            return true;
         }
     }
 }
