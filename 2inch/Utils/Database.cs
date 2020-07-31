@@ -55,8 +55,7 @@ namespace _2inch.Utils
         }
 
         public async static Task<Models.Link> GetLinkById(int id)
-        {
-            
+        {  
             using (SqlConnection connection = new SqlConnection(SQL_CONNECTION_STRING)) 
             {
                 await connection.OpenAsync();

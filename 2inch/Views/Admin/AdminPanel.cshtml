@@ -167,7 +167,7 @@
                                         <p>Deleted link</p>
                                     </div>
                                     <div class="message-body">
-                                        You have successfully deleted link with id @ViewBag.LinkDeleted
+                                        You have successfully deleted the link!
                                     </div>
                                 </article>
                                 {
@@ -204,7 +204,6 @@
                             <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth add-link">
                                 <thead>
                                     <tr>
-                                        <th>Index</th>
                                         <th>Short Link</th>
                                         <th>Long Link</th>
                                         <th>Created by</th>
@@ -220,7 +219,6 @@
                                         @foreach (_2inch.Models.Link link in links)
                                         {
                                             <tr>
-                                                <th>@link.id</th>
                                                 <td>@link.shortLink</td>
                                                 <td>@link.longLink</td>
                                                 <td>@link.createdBy</td>
