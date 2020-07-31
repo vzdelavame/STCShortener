@@ -15,5 +15,9 @@ namespace _2inch.Models
             this.Name = Name;
             this.PermissionLevel = PermissionLevel;
         }
+
+        public Auth() {
+            
+        }
     }
 }

@@ -10,15 +10,15 @@
 		return;
 	}
 
-    _2inch.Models.Link currentEditLink = _2inch.Utils.LocalDatabase.EditSelectedLink.ContainsKey(User.Identity.Name) ? _2inch.Utils.LocalDatabase.EditSelectedLink[User.Identity.Name] : null;
-    List<_2inch.Models.Link> links = _2inch.Utils.LocalDatabase.Links.ContainsKey(User.Identity.Name) ? _2inch.Utils.LocalDatabase.Links[User.Identity.Name] : null;
+    _2inch.Models.Auth currentEditUser = _2inch.Utils.LocalDatabase.EditSelectedUser.ContainsKey(User.Identity.Name) ? _2inch.Utils.LocalDatabase.EditSelectedUser[User.Identity.Name] : null;
+    List<_2inch.Models.Auth> users = _2inch.Utils.LocalDatabase.Users.ContainsKey(User.Identity.Name) ? _2inch.Utils.LocalDatabase.Users[User.Identity.Name] : null;
 }
 <!DOCTYPE html>
 <html class="has-navbar-fixed-top">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
-    <title>Edit Links - Student Shortener</title>
+    <title>Edit Users - Student Shortener</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
     <link rel="stylesheet" href="~/css/index.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
@@ -42,6 +42,10 @@
 
                     <a class="navbar-item" href=" @Url.ActionLink("AdminPanel", "Admin") ">
                         Edit Links
+                    </a>
+
+                    <a class="navbar-item" href=" @Url.ActionLink("UserAdmin", "Admin") ">
+                        Edit Users
                     </a>
                 </div>
 
@@ -69,62 +73,40 @@
                                         <p>Edit Link</p>
                                     </div>
                                     <div class="message-body">
-                                        An error occured while editing link! Maybe you don't have permission to edit this link?
+                                        An error occured while editing user! Maybe you don't have permission to edit this user?
                                     </div>
                                 </article>
                                 {
                                     ViewBag.CanNotEdit = null;
                                 }
                             }
-                            @if (currentEditLink != null)
+                            @if (currentEditUser != null)
                             {
                                 <div class="is-half">
                                     <article class="message is-info field">
                                         <div class="message-header">
-                                            <p>Selected link</p>
+                                            <p>Selected user</p>
                                         </div>
                                         <div class="message-body">
-                                            You have selected link with id @currentEditLink.id and shortLink stdnt.ms/<strong>@currentEditLink.shortLink</strong>
+                                            You have selected user <strong>@currentEditUser.Name</strong>
                                         </div>
                                     </article>
 
-                                    @if (ViewBag.OwnerNotExist != null)
-                                    {
-                                        <article class="message is-danger field">
-                                            <div class="message-header">
-                                                <p>Owner transfer</p>
-                                            </div>
-                                            <div class="message-body">
-                                                New owner that you have provided does not exist!
-                                            </div>
-                                        </article>
-                                        {
-                                            ViewBag.OwnerNotExist = null;
-                                        }
-                                    }
-
                                     <div class="field">
-                                        <label class="label">Short link</label>
+                                        <label class="label">User email</label>
                                         <div class="control">
-                                            <input class="input" type="text" name="shortLinkEdit" placeholder="stdnt.ms/..." id="shortLinkEdit" value="@currentEditLink.shortLink" runat="server" />
+                                            <input class="input" type="text" id="userEmailEdit" value="@currentEditUser.Name" runat="server" />
                                         </div>
                                     </div>
 
                                     <div class="field">
-                                        <label class="label">Long link</label>
+                                        <label class="label">User email</label>
                                         <div class="control">
-                                            <input class="input" type="text" name="longLinkEdit" placeholder="https://..." id="longLinkEdit" value="@currentEditLink.longLink" runat="server" />
+                                            <input class="input" type="text" id="userEmailEdit" value="@currentEditUser.Name" runat="server" />
                                         </div>
                                     </div>
 
-                                    <div class="field">
-                                        <label class="label">Link owner</label>
-                                        <div class="control">
-                                            <input class="input" type="text" name="ownerEdit" placeholder="..." id="ownerEdit" value="@currentEditLink.createdBy" runat="server" />
-                                        </div>
-                                    </div>
-
-                                    <input class="input" type="hidden" id="idEdit" value="@currentEditLink.id" />
+                                    <input class="input" type="hidden" id="idEdit" value="@currentEditUser.Name" />
 
                                     <div class="field is-grouped">
                                         <div class="control">
@@ -193,11 +175,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (links != null)
+                                    @if (users != null)
                                     {
-                                        @foreach (_2inch.Models.Link link in links)
+                                        @foreach (_2inch.Models.Auth user in users)
                                         {
-                                            <tr>
+                                            /*<tr>
                                                 <th>@link.id</th>
                                                 <td>@link.shortLink</td>
                                                 <td>@link.longLink</td>
@@ -218,7 +200,7 @@
                                                         </span>
                                                     </a>
                                                 </td>
-                                            </tr>
+                                            </tr>*/
                                         }
                                     }
                                 </tbody>
