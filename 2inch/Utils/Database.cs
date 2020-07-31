@@ -19,7 +19,7 @@ namespace _2inch.Utils
             
             using (SqlConnection connection = new SqlConnection(SQL_CONNECTION_STRING)) 
             {
-                connection.Open();
+                await connection.OpenAsync();
                 int clicked = -1;
                 int id = -1;
                 string longLink = null;
@@ -424,6 +424,7 @@ namespace _2inch.Utils
         {
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
+                await conn.OpenAsync();
                 string queryString = "DELETE FROM links WHERE id = @id";
 
                     using (SqlCommand delete = new SqlCommand(queryString, conn))
@@ -441,6 +442,7 @@ namespace _2inch.Utils
         {
             using (SqlConnection conn = new SqlConnection(SQL_CONNECTION_STRING))
             {
+                await conn.OpenAsync();
                 string queryString = "DELETE FROM userAccounts WHERE id = @id";
 
                     using (SqlCommand delete = new SqlCommand(queryString, conn))
