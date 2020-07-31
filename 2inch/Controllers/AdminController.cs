@@ -102,7 +102,7 @@ namespace _2inch.Controllers
             newlink.createdBy = User.Identity.Name;
             newlink.clicked = 0;
             ViewBag.Duple = await Database.GetLinkByShortLink(newlink.shortLink);
-            if (newlink.shortLink.ToLower() == "admin" || newlink.shortLink.ToLower() == "index" || newlink.shortLink.ToLower() == "404")
+            if (newlink.shortLink.ToLower().StartsWith("/") || newlink.shortLink.ToLower().StartsWith("admin") || newlink.shortLink.ToLower().StartsWith("index") || newlink.shortLink.ToLower().StartsWith("404"))
             {
                 ViewBag.Error = true;
             }
