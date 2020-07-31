@@ -27,6 +27,16 @@ $(document).ready(function() {
 
         window.location = "/Admin/UpdateSelectedUser?id=" + id +"&userEmail=" + userEmail + "&userPermission=" + userPermission;
     });
+
+    $("#showAllLinks").click(function() {
+
+        window.location = "/Admin/FilterLinks?value=true";
+    });
+
+    $("#showMyLinks").click(function() {
+
+        window.location = "/Admin/FilterLinks?value=false";
+    });
 });
 
 function GetConfirmation() {

@@ -12,6 +12,7 @@
 
     _2inch.Models.Link currentEditLink = _2inch.Utils.LocalDatabase.EditSelectedLink.ContainsKey(User.Identity.Name) ? _2inch.Utils.LocalDatabase.EditSelectedLink[User.Identity.Name] : null;
     List<_2inch.Models.Link> links = _2inch.Utils.LocalDatabase.Links.ContainsKey(User.Identity.Name) ? _2inch.Utils.LocalDatabase.Links[User.Identity.Name] : null;
+    bool showAllLinks = _2inch.Utils.LocalDatabase.ShowAllLinks.ContainsKey(User.Identity.Name) ? _2inch.Utils.LocalDatabase.ShowAllLinks[User.Identity.Name] : false;
 }
 <!DOCTYPE html>
 <html class="has-navbar-fixed-top">
@@ -187,6 +188,19 @@
                                     ViewBag.DiscardEdit = null;
                                 }
                             }
+                            <div class="field is-grouped add-link">
+                                @if(!showAllLinks) {
+                                    <div class="control">
+                                        <a id="showAllLinks" class="button is-text">Show all links</a>
+                                    </div>
+                                }
+
+                                @if(showAllLinks) {
+                                    <div class="control">
+                                        <a id="showMyLinks" class="button is-text">Show my links</a>
+                                    </div>
+                                }
+                            </div>
                             <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth add-link">
                                 <thead>
                                     <tr>

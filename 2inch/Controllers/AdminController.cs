@@ -28,7 +28,7 @@ namespace _2inch.Controllers
         public async Task<IActionResult> AdminPanel()
         {
             if(!User.Identity.IsAuthenticated) return View("Login");
-            await reloadLinks(false);
+            await reloadLinks();
 
             return View("AdminPanel");
         }
@@ -75,6 +75,8 @@ namespace _2inch.Controllers
                 identity.AddClaim(new Claim("Permission", auth.PermissionLevel + ""));
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = false });
+
+                LocalDatabase.ShowAllLinks.Add(auth.Name, false);
 
                 return View("ReRoute"); 
             } //Redirects to AdminPanel if returns True
@@ -187,7 +189,7 @@ namespace _2inch.Controllers
             string user = User.Identity.Name;
             await Database.DeleteLink(id, user);
 
-            await reloadLinks(false);
+            await reloadLinks();
 
             ViewBag.LinkDeleted = id;
 
@@ -225,7 +227,8 @@ namespace _2inch.Controllers
             return View("UserAdmin");
         }
 
-        public async Task<List<Models.Link>> reloadLinks(bool allLinks) {
+        public async Task<List<Models.Link>> reloadLinks() {
+            bool allLinks = LocalDatabase.ShowAllLinks.ContainsKey(User.Identity.Name) ? LocalDatabase.ShowAllLinks[User.Identity.Name] : false;
             List<Models.Link> LinkList = allLinks ? await Database.GetAllLinks() : await Database.GetAllLinksByUser(User.Identity.Name);
 
             LocalDatabase.Links.Remove(User.Identity.Name);
@@ -286,7 +289,7 @@ namespace _2inch.Controllers
                 ModelState.Clear();
 
             ViewBag.Edited = link;
-            await reloadLinks(false);
+            await reloadLinks();
        
             return View("AdminPanel");
         }
@@ -328,26 +331,13 @@ namespace _2inch.Controllers
             return int.Parse(User.FindFirstValue("Permission")) >= PermissionLevel;
         }
 
-        public async Task<IActionResult> FilterLinks()
+        [HttpGet]
+        public async Task<IActionResult> FilterLinks(bool value)
         {
-            List<Models.Link> All = new List<Models.Link>(await Database.GetAllLinks());
-            string user = User.Identity.Name;
+            LocalDatabase.ShowAllLinks[User.Identity.Name] = value;
+            await reloadLinks();
             //Co tu treba: ZIstit ci je Checkbox Checked, podla toho bud odfiltrovat alebo nie a reloadnut page.
             return View("AdminPanel");
-
-            //if(CheckBox.Checked) //Ak je Checked that ukaze iba user
-            //{
-               // List<Models.Link> Filtered = new List<Models.Link>(await Database.ShowOnlyMine(user));
-
-                //LocalDatabase.Links.Add();
-            //}
-
-            //else //Ak nie tak naloaduje vsetko
-            //{
-            //    List<Models.Link> UnFiltered = new List<Models.Link>(await Database.GetAllLinks());
-            //}
-
-            
         }
     }
 }

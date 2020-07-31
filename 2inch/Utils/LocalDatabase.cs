@@ -12,5 +12,6 @@ namespace _2inch.Utils
         public static Dictionary<String, List<Models.Auth>> Users = new Dictionary<String, List<Models.Auth>>();
         public static Dictionary<String, Models.Link> EditSelectedLink = new Dictionary<String, Models.Link>();
         public static Dictionary<String, Models.Auth> EditSelectedUser = new Dictionary<String, Models.Auth>();
+        public static Dictionary<String, bool> ShowAllLinks = new Dictionary<String, bool>();
     }
 }
