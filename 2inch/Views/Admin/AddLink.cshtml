@@ -71,6 +71,17 @@
                                             </div>
                                         </article>
                                     }
+                                    @if (ViewBag.Error == true)
+                                    {
+                                        <article class="message is-danger field">
+                                            <div class="message-header">
+                                                <p>Error</p>
+                                            </div>
+                                            <div class="message-body">
+                                                This short link can not be used!
+                                            </div>
+                                        </article>
+                                    }
                                     @if (ViewBag.NewLink != null)
                                     {
                                         <article class="message is-success field">
@@ -88,7 +99,7 @@
                                     <div class="field">
                                         <label class="label">Short link</label>
                                         <div class="control">
-                                            @Html.TextBoxFor(M => M.shortLink, new { @class = "input", required = "required", @placeholder = "stdnt.ms/", @id = "shortLink"})
+                                            @Html.TextBoxFor(M => M.shortLink, new { @class = "input", required = "required", @placeholder = "stdnt.ms/", @id = "shortLink" })
                                         </div>
                                     </div>
 

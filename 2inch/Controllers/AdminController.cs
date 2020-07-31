@@ -86,7 +86,11 @@ namespace _2inch.Controllers
             newlink.createdBy = User.Identity.Name;
             newlink.clicked = 0;
             ViewBag.Duple = await Database.GetLinkByShortLink(newlink.shortLink);
-            if (ViewBag.Duple == null)
+            if (newlink.shortLink.ToLower() == "admin" || newlink.shortLink.ToLower() == "index" || newlink.shortLink.ToLower() == "404")
+            {
+                ViewBag.Error = true;
+            }
+            else if (ViewBag.Duple == null)
             {
                 ViewBag.NewLink = newlink;
                 await Database.InsertLink(newlink);
