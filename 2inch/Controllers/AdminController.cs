@@ -76,7 +76,9 @@ namespace _2inch.Controllers
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = false });
 
-                LocalDatabase.ShowAllLinks.Add(auth.Name, false);
+                if(!LocalDatabase.ShowAllLinks.ContainsKey(auth.Name)) {
+                    LocalDatabase.ShowAllLinks.Add(auth.Name, false);
+                }
 
                 return View("ReRoute"); 
             } //Redirects to AdminPanel if returns True
