@@ -35,7 +35,6 @@ namespace _2inch
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseRouting();
 
             app.UseStaticFiles();
@@ -59,7 +58,7 @@ namespace _2inch
                     name: "Admin",
                     pattern: "{controller=Admin}/{action=Login}");
 
-                endpoints.MapGet("/{name:alpha}", async context =>
+                endpoints.MapGet("/{name:required}", async context =>
                 {
                     var name = context.Request.RouteValues["name"];
                     string url = Convert.ToString(name);
@@ -76,9 +75,9 @@ namespace _2inch
                 endpoints.MapGet("/admin", async context =>
                 {
                     context.Response.Redirect("/Admin/Login");
-                });             
+                });      
 
-                endpoints.MapGet("/Admin/{name:alpha}", async context =>
+                endpoints.MapGet("/Admin/{name:required}", async context =>
                 {
                     context.Response.Redirect("/admin/NotFoundPage");
                 });
