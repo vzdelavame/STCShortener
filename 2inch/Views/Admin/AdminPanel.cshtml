@@ -13,6 +13,7 @@
     _2inch.Models.Link currentEditLink = _2inch.Utils.LocalDatabase.EditSelectedLink.ContainsKey(User.Identity.Name) ? _2inch.Utils.LocalDatabase.EditSelectedLink[User.Identity.Name] : null;
     List<_2inch.Models.Link> links = _2inch.Utils.LocalDatabase.Links.ContainsKey(User.Identity.Name) ? _2inch.Utils.LocalDatabase.Links[User.Identity.Name] : null;
     bool showAllLinks = _2inch.Utils.LocalDatabase.ShowAllLinks.ContainsKey(User.Identity.Name) ? _2inch.Utils.LocalDatabase.ShowAllLinks[User.Identity.Name] : false;
+    string jsString = "~/js/index.js?" +  DateTime.Now.Ticks.ToString();
 }
 <!DOCTYPE html>
 <html class="has-navbar-fixed-top">
@@ -276,7 +277,7 @@
     </section>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="~/js/index.js"></script>
+    <script src="@jsString"></script>
 
 </body>
 </html>
