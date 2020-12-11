@@ -28,5 +28,12 @@ namespace _2inch.Models
         {
 
         }
+
+        public string getShortedLongLink() {
+            if(longLink == null)
+                return longLink;
+
+            return longLink.Length > 64 ? (longLink.Substring(0, 64) + "...") : longLink;
+        }
     }
 }

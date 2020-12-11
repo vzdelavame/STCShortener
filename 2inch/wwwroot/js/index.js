@@ -47,3 +47,12 @@ function GetConfirmation() {
         return false;
     }
 }
+
+function copyText(text) {
+    const el = document.createElement('textArea');
+    el.value = 'https://stdnt.ms/' + text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+}

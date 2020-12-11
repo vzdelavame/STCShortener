@@ -216,7 +216,7 @@
                                     </div>
                                 }
                             </div>
-                            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth add-link">
+                            <table class="table is-bordered is-striped is-hoverable is-fullwidth add-link center-table">
                                 <thead>
                                     <tr>
                                         <th>Short Link</th>
@@ -234,11 +234,21 @@
                                         @foreach (_2inch.Models.Link link in links)
                                         {
                                             <tr>
-                                                <td>@link.shortLink</td>
-                                                <td>@link.longLink</td>
-                                                <td>@link.createdBy</td>
-                                                <td>@link.creationTime</td>
-                                                <td>@link.clicked</td>
+                                                <td>
+                                                    <a onclick="copyText('@link.shortLink')" class="button is-light">@link.shortLink</a>
+                                                </td>
+                                                <td>
+                                                    <a href="@link.longLink" target="_blank" class="button is-link is-light">@link.getShortedLongLink()</a>
+                                                </td>
+                                                <td>
+                                                    <button class="button is-text">@link.createdBy</button>
+                                                </td>
+                                                <td>
+                                                    <button class="button is-text">@link.creationTime</button>
+                                                </td>
+                                                <td>
+                                                    <button class="button is-text">@link.clicked</button>
+                                                </td>
                                                 <td>
                                                     <a href="@Url.ActionLink("EditSelectedLink", "Admin", new { id = link.id, createdBy = link.createdBy }) " class="button is-info is-outlined">
                                                         <span class="icon is-small">
