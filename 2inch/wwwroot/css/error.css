@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Passion+One:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 .notfound {
   height: 100%;
@@ -7,31 +7,26 @@
 }
 
 .notfound-404 h1 {
-  font-family: 'Passion One', cursive;
-  font-size: 450px;
+  font-family: 'Roboto';
+  font-size: 300px;
   font-weight: 400;
-  background-color: #bbbbbb;
-  background-image: -webkit-linear-gradient(bottom right, #888888 0%, #363636 95%);
-  background-image: -o-linear-gradient(bottom right, #888888 0%, #363636 95%);
-  background-image: linear-gradient(to top left, #888888 0%, #363636 95%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-size: cover;
-  background-position: center;
+  color: gray;
+  margin-top: 100px;
 }
 
 .notfound-404 h2 {
-  font-family: 'Passion One', cursive;
-  font-size: 100px;
+  font-family: 'Roboto';
+  font-size: 70px;
   font-weight: 400;
-  background-color: #bbbbbb;
-  background-image: -webkit-linear-gradient(bottom right, #888888 0%, #363636 95%);
-  background-image: -o-linear-gradient(bottom right, #888888 0%, #363636 95%);
-  background-image: linear-gradient(to top left, #888888 0%, #363636 95%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-size: cover;
-  background-position: center;
+  color: gray;
+  margin-bottom: 30px;
+}
+
+.notfound-404 a {
+  font-family: 'Roboto';
+  font-size: 25px;
+  font-weight: 400;
+  color: gray;
 }
 
 @media only screen and (max-width: 1100px) {
@@ -42,5 +37,9 @@
 
     .notfound .notfound-404 h2 {
       font-size: 35px;
+    }
+
+    .notfound .notfound-404 a {
+      font-size: 20px;
     }
 }
