@@ -1,7 +1,7 @@
 ﻿@page
 @model _2inch.Models.Auth
 @{
-
+    string jsString = "/js/index.js?" +  DateTime.Now.Ticks.ToString();
 }
 <!DOCTYPE html>
 <html>
@@ -22,7 +22,7 @@
                             @using (Html.BeginForm("Login", "Admin", FormMethod.Post, new { @class = "box" }))
                             {
                                 <div class="field">
-                                    <h3 class="subtitle is-5">Login - ŠTC Shortener</h3>
+                                    <h3 class="subtitle is-5">Login - Student Shortener</h3>
                                 </div>
                                 @if (ViewBag.Passed != null)
                                 {
@@ -78,6 +78,6 @@
         </section>
     </div>
 
-    <script src="~/js/index.js"></script>
+    <script src="@jsString"></script>
 </body>
 </html>
