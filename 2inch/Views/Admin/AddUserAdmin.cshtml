@@ -108,7 +108,7 @@
                                         }
                                     }
                                     <div class="field">
-                                        <label class="label">User email</label>
+                                        <label class="label">User name ( name.surname )</label>
                                         <div class="control">
                                             @Html.TextBoxFor(M => M.Name, new { @class = "input", required = "required" })
                                         </div>
@@ -123,7 +123,7 @@
 
                                     <div class="field">
                                         <label class="label">User permission</label>
-                                        <label class="checkbox">Default user - 5, admin - 25, master admin - 50</label>
+                                        <label class="checkbox">Default user - 5, admin - 25, master admin - 50 (Info about users is labeled down)</label>
                                         <div class="control">
                                             @Html.TextBoxFor(M => M.PermissionLevel, new { @class = "input", required = "required" })
                                         </div>
@@ -134,6 +134,35 @@
                                             <button class="button is-link">Submit</button>
                                         </div>
                                     </div>
+
+                                    <div class="content">
+                                            <ul>
+                                                <li>Default user
+                                                    <ul>
+                                                        <li>Create own short link</li>
+                                                        <li>Edit own short link</li>
+                                                        <li>Delete own shown link</li>
+                                                    </ul>
+                                                </li>
+                                                <li>Admin user
+                                                    <ul>
+                                                        <li><strong>All permissions for default user +</strong></li>
+                                                        <li>Show links created by othere users</li>
+                                                        <li>Edit links created by other users</li>
+                                                        <li>Delete links created by other users</li>
+                                                    </ul>
+                                                </li>
+                                                <li>Master Admin user
+                                                    <ul>
+                                                        <li><strong>All permissions for admin user +</strong></li>
+                                                        <li>Add new users</li>
+                                                        <li>Edit existing users</li>
+                                                        <li>View existing users</li>
+                                                        <li>Delete existing users</li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
                                 }
                             </div>
                         </div>
