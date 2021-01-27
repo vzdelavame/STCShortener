@@ -45,11 +45,6 @@ namespace _2inch
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "NotFoundRoute",
-                    pattern: "/404",
-                    defaults: new { controller = "NotFound", action = "Index" });
-
-                endpoints.MapControllerRoute(
                     name: "Admin",
                     pattern: "{controller=Admin}/{action=Login}");
 
@@ -60,7 +55,7 @@ namespace _2inch
                     string final = await Database.GetLongString(url);
                     if (final == null)
                     {
-                        context.Response.Redirect("/404");
+                        context.Response.Redirect("https://studentambassadors.sk/");
                         return;
                     }
                     context.Response.Redirect(final);
